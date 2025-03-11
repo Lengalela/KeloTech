@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development Tutorials</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#html">HTML</a></li>
+                <li><a href="#css">CSS</a></li>
+                <li><a href="#javascript">JavaScript</a></li>
+                <li><a href="#php">PHP</a></li>
+                <li><a href="#mysql">MySQL</a></li>
+                <li><a href="login.html">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <section id="html">
+            <h1>HTML Tutorial</h1>
+            <p>HTML (HyperText Markup Language) is the standard markup language used to create web pages.</p>
+            <h2>HTML Basic</h2>
+            <p>HTML documents consist of a series of elements, which are represented by tags.</p>
+            <pre>
+            &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Page Title&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;h1&gt;My First Heading&lt;/h1&gt;
+                &lt;p&gt;My first paragraph.&lt;/p&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+            </pre>
+            <h2>HTML Elements</h2>
+            <p>HTML elements are represented by tags, which are surrounded by angle brackets.</p>
+            <ul>
+                <li>&lt;p&gt; - defines a paragraph of text</li>
+                <li>&lt;h1&gt; - defines a large heading</li>
+                <li>&lt;img&gt; - defines an image</li>
+            </ul>
+        </section>
+        <section id="css">
+            <h1>CSS Tutorial</h1>
+            <p>CSS (Cascading Style Sheets) is a styling language used to control the layout and appearance of web pages.</p>
+            <h2>CSS Basic</h2>
+            <p>CSS is used to separate the presentation of a document from its structure.</p>
+            <h2>CSS Selectors</h2>
+            <p>CSS selectors are used to target specific elements on a web page.</p>
+            <ul>
+                <li>body - selects the body element</li>
+                <li>h1 - selects all h1 elements</li>
+                <li>.header - selects all elements with the class "header"</li>
+            </ul>
+        </section>
+        <section id="javascript">
+            <h1>JavaScript Tutorial</h1>
+            <p>JavaScript is a programming language used to add interactivity to web pages.</p>
+            <h2>JavaScript Basic</h2>
+            <p>JavaScript is used to create dynamic effects on web pages.</p>
+            <pre>
+console.log("Hello World!");
+            </pre>
+            <h2>JavaScript Variables</h2>
+            <p>JavaScript variables are used to store values.</p>
+            <ul>
+                <li>var - declares a variable</li>
+                <li>let - declares a block-scoped variable</li>
+                <li>const - declares a constant variable</li>
+            </ul>
+        </section>
+
+        <!-- HTML for the pop-up dialog -->
+        <div id="popup-dialog">
+            <h2>Enter your information:</h2>
+            <input type="text" id="name" placeholder="Name">
+            <input type="email" id="email" placeholder="Email">
+            <button id="submit-btn">Submit</button>
+            <button id="cancel-btn">Cancel</button>
+        </div>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Web Development Tutorials. All rights reserved.</p>
+    </footer>
+
+    <!-- Script Section -->
+    <script src="script.js"></script>
+</body>
+</html>
