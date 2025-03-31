@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Sidebar Section -->
+    <div class="sidebar3">
+        <div class="dropdown">
+            <a href="index.html">Go Back</a>
+            <a href="#" onclick="showPage('Overview')">Overview</a>
+            <button class="dropdown-btn" >Lessons
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+              <a href="#" onclick="showPage('Lesson1')">Lesson 1</a>
+              <a href="#" onclick="showPage('Lesson2')">Lesson 2</a>
+              <a href="#" onclick="showPage('Lesson3')">Lesson 3</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main-->
+    <!-- Lesson content section w-->
+    <main class="main-right">
+        <div class="content">
+            <div id="Overview" class="page active">
+                <h1>Lesson 1: Introduction to JavaScript</h1>
+                <h2>Lesson 1: Introduction to JavaScript</h2>
+                <ul>
+                    <li>Learners will understand what JavaScript is</li>
+                    <li>Understand its purpose</li>
+                    <li>Know real-world applications</li>
+                </ul>
+            </div>
+    
+            <div id="Lesson1" class="page">
+                <div class="level1">
+                <h2>1. What is JavaScript</h2>
+                <ul>
+                    <li>Definition: JavaScript is a programming language that makes web pages interactive</li>
+                    <li>It allows websites to respond to user action dynamically</li>
+                    <li>JavaScript is used alongside HTML (for structure) & CSS (for styling)</li>
+                </ul>
+                <br>
+                <h2>2. Real-World examples</h2>
+                <ul>
+                    <li>Web-based games: Chrome Dino game</li>
+                    <li>Online forms that validate input: password strength checkers or login forms</li>
+                    <li>Interactive maps: Google Maps uses JavaScript to load map data dynamically</li>
+                    <li>Websites like Google and Youtube use JavaScript for interactive elements</li>
+                </ul>
+                <br>
+                <h2>Example</h2>
+                <p>
+                    <pre><code>
+                &lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;body&gt;
+                
+                &lt;h2&gt;JavaScript in Action&lt;/h2&gt;
+                
+                &lt;button onclick="alert('Hello, JavaScript!')"&gt;Click Me&lt;/button&gt;
+                
+                &lt;/body&gt;
+                &lt;/html&gt;
+                    </code></pre>
+                </p>
+                <br>
+                <ul>
+                    <li>Allow learners to run and modify this code</li>
+                </ul>
+
+                <h2>Exercises</h2>
+        
+        <h4>1. Changing the Alert Message</h4>
+        <p>Modify the JavaScript code to display a different message when the button is clicked.</p>
+        <p><strong>Hint:</strong> Change the text inside alert("Your message here!");</p>
+        
+        <h4>2. Write your own JavaScript code</h4>
+        <p>Write a JavaScript program that displays your name in an alert</p>
+        <p><strong>Guide:</strong></p>
+        <pre><code>&lt;script&gt;
+alert("Hello, my name is [Your Name]!");
+&lt;/script&gt;</code></pre>
+        
+        <h4>3. Interactive prompt box</h4>
+        <p>Learners will create a script that asks for a name and displays a greeting.</p>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;JavaScript Prompt&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;button onclick="askName()"&gt;Enter Your Name&lt;/button&gt;
+    &lt;script&gt;
+    function askName() {
+        let name = prompt("What is your name?");
+        alert("Hello, " + name + "! Welcome to JavaScript.");
+    }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+                <h2>Summary of Lesson 1</h2>
+                <ul>
+                    <li>JavaScript allows websites to be dynamic and interactive.</li>
+                    <li>Real-world examples include web-based games, interactive maps, form validation, and dynamic website elements.</li>
+                    <li>A simple JavaScript program can display alerts and respond to user input.</li>
+                    <li>Learners practiced writing basic JavaScript code, including alerts and prompts.</li>
+                </ul>
+                </div>
+
+                <div class="level2">
+                    <h1>Grade 9 - JavaScript Functions</h1>
+    
+                        <h2>Lesson Outcomes/Objectives</h2>
+                        <ul>
+                            <li>Understand what functions are in JavaScript.</li>
+                            <li>Explain the purpose of functions and why they are useful.</li>
+                            <li>Identify real-world applications of JavaScript functions.</li>
+                            <li>Write and use simple JavaScript functions.</li>
+                        </ul>
+
+                        <h2>Previous Lesson Recap</h2>
+                        <p>JavaScript is a powerful programming language used to make websites interactive. It enables dynamic responses to user actions, making web pages more engaging and functional. Some real-world applications include web-based games, interactive maps, online form validation, and dynamic website elements. In this lesson, you practiced writing and modifying basic JavaScript programs, including alerts and user prompts.</p>
+
+                        <h2>1. What is a JavaScript Function</h2>
+                        <ul>
+                            <li><strong>Definition:</strong> A function is a block of reusable code that performs a specific task. Functions help programmers write cleaner and more efficient code.</li>
+                            <li>A function is like a recipe: You write it once and use it multiple times instead of repeating steps.</li>
+                            <li><strong>Examples:</strong> A calculator function to add numbers, a greeting function that welcomes users.</li>
+                        </ul>
+
+                        <h2>2. Real-World examples</h2>
+                        <ul>
+                            <li><strong>Form Validation:</strong> Checking if a user has entered a valid email before submitting a form.</li>
+                            <li><strong>Automated Messages:</strong> Displaying a welcome message when someone visits a website.</li>
+                            <li><strong>Math Calculations:</strong> A function that adds or multiplies numbers in an online calculator.</li>
+                            <li><strong>Event Handling:</strong> Running specific code when a button is clicked.</li>
+                        </ul>
+
+                        <h2>3. Examples</h2>
+                        
+                        <h3>Example 1: Simple Function</h3>
+                        <pre><code>&lt;!DOCTYPE html&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;title&gt;JavaScript Function Example&lt;/title&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;h2&gt;Click the button to see a message:&lt;/h2&gt;
+                        &lt;button onclick="sayHello()"&gt;Click Me&lt;/button&gt;
+                        &lt;script&gt;
+                        function sayHello() {
+                            alert("Hello, welcome to JavaScript!");
+                        }
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;</code></pre>
+                    <p><strong>Activity:</strong> Change the function to say "Good morning, Grade 9 learners"</p>
+
+                    <h3>Example 2: Function with Parameter</h3>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+                    &lt;html&gt;
+                    &lt;body&gt;
+                        &lt;h2&gt;Displaying a Custom Message&lt;/h2&gt;
+                        &lt;p&gt;Click the button to display your message:&lt;/p&gt;
+                        &lt;button onclick="showMessage('Welcome to JavaScript!')"&gt;Click Me&lt;/button&gt;
+                        &lt;script&gt;
+                        function showMessage(message) {
+                            alert(message);
+                        }
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;</code></pre>
+
+                    <h3>Example 3: Function That Multiplies Two Numbers</h3>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+                    &lt;html&gt;
+                    &lt;body&gt;
+                        &lt;h2&gt;Multiplying Two Numbers&lt;/h2&gt;
+                        &lt;p&gt;Click the button to multiply the numbers:&lt;/p&gt;
+                        &lt;button onclick="multiplyNumbers(5, 6)"&gt;Click Me&lt;/button&gt;
+                        &lt;script&gt;
+                        function multiplyNumbers(a, b) {
+                            let result = a * b;
+                            alert("The result is: " + result);
+                        }
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;</code></pre>
+
+
+                        <h3>Exercises</h3>
+                        
+                        <h4>1. Create a function that adds two numbers and displays the result</h4>
+                        <pre><code>&lt;!DOCTYPE html&gt;
+                    &lt;html&gt;
+                    &lt;body&gt;
+                        &lt;h2&gt;Adding Two Numbers&lt;/h2&gt;
+                        &lt;p&gt;Click the button to see the result:&lt;/p&gt;
+                        &lt;button onclick="addTwoNumbers()"&gt;Click Me&lt;/button&gt;
+                        &lt;script&gt;
+                        function addTwoNumbers() {
+                            let num1 = 5;
+                            let num2 = 10;
+                            let sum = num1 + num2;
+                            alert(sum);
+                        }
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;</code></pre>
+                        
+                        <h4>2. Writing a Function with a Parameter</h4>
+                        <p>Modify the greeting function to accept a name as a parameter and display "Hello, [name]!"</p>
+                        <pre><code>&lt;!DOCTYPE html&gt;
+                    &lt;html&gt;
+                    &lt;body&gt;
+                        &lt;h2&gt;Personalized Greeting&lt;/h2&gt;
+                        &lt;p&gt;Click the button to see the greeting:&lt;/p&gt;
+                        &lt;button onclick="greet('John')"&gt;Click Me&lt;/button&gt;
+                        &lt;script&gt;
+                        function greet(name) {
+                            alert("Hello, " + name + "!");
+                        }
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;</code></pre>
+
+                    <h2>Summary of Lesson</h2>
+                    <p><strong>What is a Function?</strong><br>
+                    A <strong>function</strong> is a reusable block of code that can be called to perform a task. It's like a recipe: you write it once and use it many times.</p>
+
+                    <p><strong>Real-World Applications:</strong><br>
+                    Functions are used in many ways, such as:</p>
+                    <ul>
+                        <li><strong>Form validation</strong> (checking user input).</li>
+                        <li><strong>Automated messages</strong> (like welcome pop-ups).</li>
+                        <li><strong>Math calculations</strong> (adding or multiplying numbers).</li>
+                        <li><strong>Event handling</strong> (running code when buttons are clicked).</li>
+                    </ul>
+
+                    <p><strong>Examples Covered:</strong></p>
+                    <ol>
+                        <li><strong>Simple Function Example:</strong> Displaying a message when a button is clicked.</li>
+                        <li><strong>Custom Message Function:</strong> Displaying a personalized message passed as a parameter.</li>
+                        <li><strong>Multiplication Function:</strong> Multiplying two numbers and displaying the result.</li>
+                    </ol>
+                </div>
+                <div class="level3">
+                    <h1>Grade 10 - Working with Arrays and Objects</h1>
+    
+                    <h2>Lesson Outcomes/Objectives</h2>
+                    <ul>
+                        <li>Understand the importance of <strong>arrays</strong> and <strong>objects</strong> in JavaScript.</li>
+                        <li>Recognize how arrays and objects can be used to store and organize data.</li>
+                        <li>Learn to manipulate arrays and objects in JavaScript.</li>
+                        <li>Apply real-world examples of arrays and objects in JavaScript.</li>
+                    </ul>
+
+                    <h2>Recap: JavaScript Functions</h2>
+                    <ul>
+                        <li><strong>Functions</strong> allow us to write cleaner and reusable code.</li>
+                        <li><strong>Real-world uses</strong> include validation, greetings, and calculations.</li>
+                        <li>We wrote simple functions to display messages and perform math operations.</li>
+                    </ul>
+
+                    <h2>1. What are Arrays and Objects</h2>
+                    
+                    <h3>Arrays:</h3>
+                    <ul>
+                        <li><strong>Definition:</strong> An array is a collection of items (values or variables) stored in a single variable. Arrays are used to store multiple values in a single variable, making it easier to work with large datasets.</li>
+                        <li><strong>Structure:</strong> Arrays are ordered collections, indexed by integers (starting at 0).</li>
+                        <li><strong>Example:</strong></li>
+                    </ul>
+                    <pre><code>let fruits = ["Apple", "Banana", "Cherry"];
+                console.log(fruits[1]); // Outputs: Banana</code></pre>
+                    
+                    <h3>Objects:</h3>
+                    <ul>
+                        <li><strong>Definition:</strong> An object is a collection of key-value pairs. Each key (also called a property) is unique, and it is associated with a value.</li>
+                        <li><strong>Structure:</strong> Objects are unordered collections of key-value pairs, where the key is a string, and the value can be any data type (e.g., string, number, array, function).</li>
+                        <li><strong>Example:</strong></li>
+                    </ul>
+                    <pre><code>let person = {
+                    name: "John",
+                    age: 30,
+                    job: "Developer"
+                };
+                console.log(person.name); // Outputs: John</code></pre>
+
+                    <h2>2. Examples</h2>
+                    
+                    <h3>Example 1: Working with Arrays</h3>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Array Example&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h2&gt;Array Example - List of Fruits&lt;/h2&gt;
+                    &lt;p id="demo"&gt;&lt;/p&gt;
+                    &lt;script&gt;
+                    let fruits = ["apple", "banana", "cherry"];
+                    fruits.push("orange"); // Add a new fruit
+                    document.getElementById("demo").innerHTML = fruits;
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;</code></pre>
+                    
+                    <h3>Example 2: Working with Objects</h3>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Object Example&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h2&gt;Object Example - Car&lt;/h2&gt;
+                    &lt;p id="demo"&gt;&lt;/p&gt;
+                    &lt;script&gt;
+                    let car = {
+                        make: "Tesla",
+                        model: "Model S",
+                        year: 2022
+                    };
+                    car.color = "red"; // Add a new property
+                    document.getElementById("demo").innerHTML = car.make + " " + car.model + " (" + car.year + "), Color: " + car.color;
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;</code></pre>
+                    
+                    <h3>Example 3: Array with Objects</h3>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Array of Objects Example&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h2&gt;Array of Objects - Students&lt;/h2&gt;
+                    &lt;p id="demo"&gt;&lt;/p&gt;
+                    &lt;script&gt;
+                    let students = [
+                        { name: "John", age: 16 },
+                        { name: "Jane", age: 15 },
+                        { name: "Bob", age: 17 }
+                    ];
+                    
+                    students.push({ name: "Alice", age: 18 }); // Add new student
+                    
+                    let text = "";
+                    for (let i = 0; i &lt; students.length; i++) {
+                        text += students[i].name + " is " + students[i].age + " years old.&lt;br&gt;";
+                    }
+                    
+                    document.getElementById("demo").innerHTML = text;
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;</code></pre>
+
+
+                        <h3>Exercises</h3>
+                        
+                        <h4>1. Exercise 1: Create an Array of Colors</h4>
+                        <p><strong>Task:</strong> Create an array of at least 5 colors. Add a new color to the array using the push() method, then display all the colors using a for loop.</p>
+                        <pre><code>&lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Array of Colors&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h2&gt;Array of Colors&lt;/h2&gt;
+                    &lt;p id="demo"&gt;&lt;/p&gt;
+                    &lt;script&gt;
+                    // Create an array of colors
+                    let colors = ["red", "blue", "green", "yellow", "orange"];
+                    // Add a new color to the array
+                    colors.push("purple");
+                    // Display all the colors
+                    let colorList = "";
+                    for (let i = 0; i &lt; colors.length; i++) {
+                        colorList += colors[i] + "&lt;br&gt;";
+                    }
+                    document.getElementById("demo").innerHTML = colorList;
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;</code></pre>
+                        
+                        <h4>2. Exercise 2: Create an Object for a Book</h4>
+                        <p><strong>Task:</strong> Create an object that represents a book with properties such as title, author, and year. Add a new property called genre and display the book information.</p>
+                        <pre><code>&lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Book Object&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h2&gt;Book Information&lt;/h2&gt;
+                    &lt;p id="demo"&gt;&lt;/p&gt;
+                    &lt;script&gt;
+                    // Create an object representing a book
+                    let book = {
+                        title: "JavaScript for Beginners",
+                        author: "John Doe",
+                        year: 2020
+                    };
+                    // Add a new property to the object
+                    book.genre = "Programming";
+                    // Display the book information
+                    let bookInfo = "Title: " + book.title + "&lt;br&gt;" +
+                        "Author: " + book.author + "&lt;br&gt;" +
+                        "Year: " + book.year + "&lt;br&gt;" +
+                        "Genre: " + book.genre;
+                    document.getElementById("demo").innerHTML = bookInfo;
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;</code></pre>
+
+                    <h2>Summary</h2>
+                    <ul>
+                        <li><strong>Arrays:</strong> A collection of values stored in a single variable. Items are accessed using an index.
+                            <ul><li>Example: let fruits = ["Apple", "Banana", "Cherry"];</li></ul>
+                        </li>
+                        <li><strong>Objects:</strong> A collection of key-value pairs, where each key has a corresponding value.
+                            <ul><li>Example: let person = {name: "John", age: 30};</li></ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>Key Concepts:</h3>
+                    <ul>
+                        <li><strong>Array Operations:</strong> Add values using push() and display using loops.</li>
+                        <li><strong>Object Operations:</strong> Add properties and display using dot notation.</li>
+                    </ul>
+                </div>
+
+                <a href="quizes.html">Go do quiz now</a>
+            </div>
+    
+            <div id="Lesson2" class="page">
+                <h1>Contact</h1>
+                <p>Get in touch with us.</p>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="script2.js"></script>
+</body>
+</html>
