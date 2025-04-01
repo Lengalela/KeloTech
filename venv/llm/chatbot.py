@@ -38,7 +38,7 @@ PARAMETER temperature 0.1
 """
 
 # Create the model (if needed, ensure it is created)
-##/ollama.create(model="chatbot", modelfile=modelfile)
+ollama.create(model="chatbot", modelfile=modelfile)
 
 # Chat function for terminal interaction
 def chat():
