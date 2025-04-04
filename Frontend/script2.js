@@ -38,7 +38,6 @@
   // document.querySelector('.level1 h1').textContent = `Grade ${level} - JavaScript`;
 
 //Chat bot functions
-
 (function() {
   // Get DOM elements
   const chatButton = document.getElementById('chatButton');
@@ -98,18 +97,42 @@
       });
 
       // Simple bot response logic
-      function getBotResponse(userMessage) {
-          const lowerMsg = userMessage.toLowerCase();
+      // function getBotResponse(userMessage) {
+      //     const lowerMsg = userMessage.toLowerCase();
           
-          if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-              return "Hi there! How can I assist you?";
-          } else if (lowerMsg.includes('help')) {
-              return "I'm here to help! What do you need assistance with?";
-          } else if (lowerMsg.includes('thanks') || lowerMsg.includes('thank you')) {
-              return "You're welcome! Is there anything else I can help with?";
-          } else {
-              return "I understand. Our team will get back to you soon if you need further assistance.";
-          }
-      }
+      //     if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+      //         return "Hi there! How can I assist you?";
+      //     } else if (lowerMsg.includes('help')) {
+      //         return "I'm here to help! What do you need assistance with?";
+      //     } else if (lowerMsg.includes('thanks') || lowerMsg.includes('thank you')) {
+      //         return "You're welcome! Is there anything else I can help with?";
+      //     } else {
+      //         return "I understand. Our team will get back to you soon if you need further assistance.";
+      //     }
+      // }
   }
+})();
+
+(async function sendMessage() {
+  let userInput = document.getElementById("user-input").value;
+  if (!userInput) return; // Don't send empty messages
+  
+  let chatBox = document.getElementById("chat-box");
+  chatBox.innerHTML += `<p><b>You:</b> ${userInput}</p>`; // Display user message
+
+  try {
+      let response = await fetch("http://localhost:8000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userInput })
+      });
+
+      let data = await response.json();
+      chatBox.innerHTML += `<p><b>Bot:</b> ${data.response}</p>`; // Display bot response
+  } catch (error) {
+      chatBox.innerHTML += `<p style="color:red;"><b>Error:</b> Could not connect to chatbot.</p>`;
+      console.error("Chatbot error:", error);
+  }
+
+  document.getElementById("user-input").value = ""; // Clear input box
 })();
