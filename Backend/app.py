@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from langchain_ollama import OllamaLLM
 import ollama
 import json
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-model = OllamaLLM(model="llama2")
+# Define the model configuration for the chatbot
+modelfile = """
+FROM llama2
+SYSTEM "You are a helpful chatbot that answers school-related questions only to students from K8, K9, and K10. Your responses should be succinct, precise, informative, and polite. Avoid unnecessary details and focus on clarity."
+PARAMETER temperature 0.1
+"""
 
 # File to store chat history
 CHAT_HISTORY_FILE = "chat_history.json"
@@ -50,12 +54,15 @@ def chat():
     # Use last 5 messages for context
     context = "\n".join([f"You: {h['user']}\nBot: {h['bot']}" for h in history[-5:]])
 
+    # Combine system message and user input with context
+    prompt = f"{modelfile}\n{context}\nYou: {user_input}\nBot:"
+
     try:
-        # Generate a response using Ollama
+        # Generate a response using Ollama with the model configuration and prompt
         response = ollama.generate(
-            model="llama2",
-            prompt=f"{context}\nYou: {user_input}\nBot:",
-            options={"temperature": 0.1}
+            model="llama2",  # You can change this to any specific model or use a custom model
+            prompt=prompt,
+            options={"temperature": 0.1}  # Additional parameters if needed
         )
         bot_reply = response['response'].strip()
 
