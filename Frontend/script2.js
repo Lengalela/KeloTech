@@ -60,30 +60,54 @@
       });
 
       // Send message function
-      function sendMessage() {
-          const message = messageInput.value.trim();
-          if (message) {
-              // Add user message to chat
-              const userMessage = document.createElement('div');
-              userMessage.className = 'message user-message';
-              userMessage.textContent = message;
-              chatMessages.appendChild(userMessage);
+      // function sendMessage() {
+      //     const message = messageInput.value.trim();
+      //     if (message) {
+      //         // Add user message to chat
+      //         const userMessage = document.createElement('div');
+      //         userMessage.className = 'message user-message';
+      //         userMessage.textContent = message;
+      //         chatMessages.appendChild(userMessage);
               
-              // Clear input
-              messageInput.value = '';
+      //         // Clear input
+      //         messageInput.value = '';
               
-              // Scroll to bottom
-              chatMessages.scrollTop = chatMessages.scrollHeight;
+      //         // Scroll to bottom
+      //         chatMessages.scrollTop = chatMessages.scrollHeight;
               
-              // Simulate bot response after a short delay
-              setTimeout(() => {
-                  const botMessage = document.createElement('div');
-                  botMessage.className = 'message bot-message';
-                  botMessage.textContent = getBotResponse(message);
-                  chatMessages.appendChild(botMessage);
-                  chatMessages.scrollTop = chatMessages.scrollHeight;
-              }, 500);
-          }
+      //         // Simulate bot response after a short delay
+      //         setTimeout(() => {
+      //             const botMessage = document.createElement('div');
+      //             botMessage.className = 'message bot-message';
+      //             botMessage.textContent = getBotResponse(message);
+      //             chatMessages.appendChild(botMessage);
+      //             chatMessages.scrollTop = chatMessages.scrollHeight;
+      //         }, 500);
+      //     }
+      // }
+
+      async function sendMessage() {
+        let userInput = document.getElementById("message-input").value;
+        if (!userInput) return; // Don't send empty messages
+        
+        let chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<p><b>You:</b> ${userInput}</p>`; // Display user message
+      
+        try {
+            let response = await fetch("http://localhost:8000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+      
+            let data = await response.json();
+            chatBox.innerHTML += `<p><b>Bot:</b> ${data.response}</p>`; // Display bot response
+        } catch (error) {
+            chatBox.innerHTML += `<p style="color:red;"><b>Error:</b> Could not connect to chatbot.</p>`;
+            console.error("Chatbot error:", error);
+        }
+      
+        document.getElementById("message-input").value = ""; // Clear input box
       }
 
       // Send message on button click
@@ -113,7 +137,7 @@
   }
 })();
 
-(async function sendMessage() {
+/*(async function sendMessage() {
   let userInput = document.getElementById("user-input").value;
   if (!userInput) return; // Don't send empty messages
   
@@ -135,4 +159,4 @@
   }
 
   document.getElementById("user-input").value = ""; // Clear input box
-})();
+})();*/
