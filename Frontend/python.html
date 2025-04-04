@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="script2.js"></script>
+
     <title>Document</title>
 </head>
 <body>
@@ -41,6 +43,36 @@
                 <div class="chat-input">
                     <input type="text" id="message-input" placeholder="Type your message...">
                     <button id="send-btn" onclick="sendToOllama()">Send</button>
+
+                    <script>
+                        async function sendMessage() {
+                          const inputBox = document.getElementById("user-input");
+                          const chatBox = document.getElementById("chat-box");
+                          const userMessage = inputBox.value;
+                    
+                          if (!userMessage.trim()) return;
+                    
+                          chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
+                          inputBox.value = "";
+                    
+                          try {
+                            const response = await fetch("http://localhost:8000/chat", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json"
+                              },
+                              body: JSON.stringify({ message: userMessage })
+                            });
+                    
+                            const data = await response.json();
+                            chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                          } catch (error) {
+                            chatBox.innerHTML += `<p style="color:red;"><strong>Error:</strong> Could not connect to chatbot server.</p>`;
+                            console.error("Chatbot Error:", error);
+                          }
+                        }
+                      </script>
                 </div>
             </div>
 
@@ -56,7 +88,7 @@
             </div> -->
 
             <!-- Link to JavaScript -->
-            <script src="/venv/api/chatbot.js"></script> 
+        <!-- <script src="/venv/api/chatbot.js"></script> -->   
         </section>
     </div>
 
