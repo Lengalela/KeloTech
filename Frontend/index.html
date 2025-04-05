@@ -9,8 +9,8 @@
     <!-- Header Section -->
     <div class="sidebar2">
       <a href="#"><img src="icons/image.png" alt="pfp" /></a>
-      <p>Welcome Jacob👋</p>
-      <p>Im a <b>Beginner</b></p>
+      <p id="welcomeMessage">Welcome <span id="usernameDisplay"></span> 👋</p>
+      <p>I'm a <b>Beginner</b></p>
     </div>
 
     <!-- Main Content Section -->
@@ -82,7 +82,9 @@
       <p>&copy; 2025 KeloTech. All rights reserved.</p>
     </footer>
 
-    <!-- We'll run a script to check if the user is logged in -->
+    <!-- Scripts -->
+    <!-- This script fetches the learner's profile info and updates the welcome message -->
+    <script src="index.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

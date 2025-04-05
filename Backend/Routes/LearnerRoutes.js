@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { registerLearner, loginLearner } = require("../Controllers/LearnerController");
+const { registerLearner, loginLearner, getLearnerProfile } = require("../Controllers/LearnerController");
 const { authenticateLearnerToken } = require("../Middleware/authMiddleware");
 
-// ✅ Make sure these are actual functions and not undefined
+// Registration route
+router.post("/register", registerLearner);
 
-router.post("/register", registerLearner); // ✅ FUNCTION
-router.post("/login", loginLearner);       // ✅ FUNCTION
+// Login route
+router.post("/login", loginLearner);
 
-router.get("/profile", authenticateLearnerToken, (req, res) => {
-  res.json({ message: "Authenticated", userId: req.user.id });
-});
+// Profile route (protected)
+router.get("/profile", authenticateLearnerToken, getLearnerProfile);
 
 module.exports = router;
