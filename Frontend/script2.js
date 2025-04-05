@@ -1,3 +1,35 @@
+// Dropdown functionality
+(function() {
+  var dropdown = document.getElementsByClassName("dropdown-btn");
+  var i;
+
+  for (i = 0; i < dropdown.length; i++) {
+      dropdown[i].addEventListener("click", function() {
+          this.classList.toggle("actived");
+          var dropdownContent = this.nextElementSibling;
+          if (dropdownContent.style.display === "block") {
+              dropdownContent.style.display = "none";
+          } else {
+              dropdownContent.style.display = "block";
+          }
+      });
+  }
+})();
+
+// Page navigation functionality
+(function() {
+  function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+
+      // Show the selected page
+      document.getElementById(pageId).classList.add("active");
+  }
+
+  // Make showPage available globally if needed
+  window.showPage = showPage;
+})();
+
 // Chat bot functions
 (function() {
     // Get DOM elements
