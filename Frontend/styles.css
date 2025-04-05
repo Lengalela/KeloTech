@@ -86,7 +86,7 @@ input {
     border-radius: 5px;
 }
 
-#submit-btn, #cancel-btn {
+#submit-btn, #cancel-btn, #loginbtn, #signupBtn {
     width: 100%;
     padding: 10px;
     background: blue;
