@@ -19,7 +19,7 @@
               <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-container">
-              <a href="#" onclick="showPage('Lesson1')">Lesson 1</a>
+                <a href="#" onclick="showPage('Lesson1'); loadLessonFromDatabase(1)">Lesson 1</a>
               <a href="#" onclick="showPage('Lesson2')">Lesson 2</a>
               <a href="#" onclick="showPage('Lesson3')">Lesson 3</a>
             </div>
@@ -107,82 +107,14 @@
             </div>
     
             <div id="Lesson1" class="page">
-                <div class="level1">
-                <h2>1. What is JavaScript</h2>
-                <ul>
-                    <li>Definition: JavaScript is a programming language that makes web pages interactive</li>
-                    <li>It allows websites to respond to user action dynamically</li>
-                    <li>JavaScript is used alongside HTML (for structure) & CSS (for styling)</li>
-                </ul>
-                <br>
-                <h2>2. Real-World examples</h2>
-                <ul>
-                    <li>Web-based games: Chrome Dino game</li>
-                    <li>Online forms that validate input: password strength checkers or login forms</li>
-                    <li>Interactive maps: Google Maps uses JavaScript to load map data dynamically</li>
-                    <li>Websites like Google and Youtube use JavaScript for interactive elements</li>
-                </ul>
-                <br>
-                <h2>Example</h2>
-                <p>
-                    <pre><code>
-                &lt;!DOCTYPE html&gt;
-                &lt;html&gt;
-                &lt;body&gt;
-                
-                &lt;h2&gt;JavaScript in Action&lt;/h2&gt;
-                
-                &lt;button onclick="alert('Hello, JavaScript!')"&gt;Click Me&lt;/button&gt;
-                
-                &lt;/body&gt;
-                &lt;/html&gt;
-                    </code></pre>
-                </p>
-                <br>
-                <ul>
-                    <li>Allow learners to run and modify this code</li>
-                </ul>
-
-                <h2>Exercises</h2>
-        
-        <h4>1. Changing the Alert Message</h4>
-        <p>Modify the JavaScript code to display a different message when the button is clicked.</p>
-        <p><strong>Hint:</strong> Change the text inside alert("Your message here!");</p>
-        
-        <h4>2. Write your own JavaScript code</h4>
-        <p>Write a JavaScript program that displays your name in an alert</p>
-        <p><strong>Guide:</strong></p>
-        <pre><code>&lt;script&gt;
-alert("Hello, my name is [Your Name]!");
-&lt;/script&gt;</code></pre>
-        
-        <h4>3. Interactive prompt box</h4>
-        <p>Learners will create a script that asks for a name and displays a greeting.</p>
-        <pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;JavaScript Prompt&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;button onclick="askName()"&gt;Enter Your Name&lt;/button&gt;
-    &lt;script&gt;
-    function askName() {
-        let name = prompt("What is your name?");
-        alert("Hello, " + name + "! Welcome to JavaScript.");
-    }
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-
-                <h2>Summary of Lesson 1</h2>
-                <ul>
-                    <li>JavaScript allows websites to be dynamic and interactive.</li>
-                    <li>Real-world examples include web-based games, interactive maps, form validation, and dynamic website elements.</li>
-                    <li>A simple JavaScript program can display alerts and respond to user input.</li>
-                    <li>Learners practiced writing basic JavaScript code, including alerts and prompts.</li>
-                </ul>
-                </div>
-
+                <div id="lessonTitle"></div>
+                <div id="lessonObjectives"></div>
+                <div id="lessonExplanation"></div>
+                <div id="lessonExampleCode"></div>
+                <div id="lessonExercises"></div>
+                <div id="lessonSummary"></div>
+                <div id="lessonQuiz"></div>
+              </div>
                 <div class="level2">
                     <h1>Grade 9 - JavaScript Functions</h1>
     
