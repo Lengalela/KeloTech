@@ -78,7 +78,7 @@ img {
     text-align: center;
 }
 
-input {
+input:not(.question input) {
     width: 80%;
     padding: 10px;
     margin: 10px 0;
@@ -387,3 +387,41 @@ button:hover {
     background-color: #f1f1f1;
     margin-right: auto;
 }
+
+/*Questionnare stuff*/
+
+ #question-body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+  }
+  #question-body h2 {
+    text-align: center;
+    color: #333;
+  }
+  .question label {
+    display: block;
+    margin: 15px 0 5px;
+  }
+  .question {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .qsubmit-btn {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .qsubmit-btn:hover {
+    background-color: #45a049;
+  }
