@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body id="forms">
+    <div class="login-container">
+      <h2>Login</h2>
+      <!-- The form, no action because we'll handle with JS -->
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit" id="loginbtn">Login</button>
+        <br />
+        <!-- If you have a separate signup page, link it -->
+        <button type="button" id="signupBtn">Sign up</button>
+      </form>
+
+      <!-- Where we display success/error messages -->
+      <div id="loginResponse"></div>
+    </div>
+
+    <!-- Link to your login.js for fetch logic -->
+    <script src="login.js"></script>
+  </body>
+</html>

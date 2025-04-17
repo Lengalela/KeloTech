@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Course Detail - KeloTech</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script defer src="course-detail.js"></script>
+  </head>
+  <body>
+    <!-- Sidebar for Lesson Navigation -->
+    <div class="sidebar3" id="sidebarLessons">
+      <!-- Lesson sections (Beginner, Intermediate, Advanced) will be injected dynamically -->
+    </div>
+
+    <!-- Main Content for Course Detail -->
+    <main class="main-right">
+      <div id="courseContainer">
+        <h1 id="courseTitle"></h1>
+        <p id="courseDescription"></p>
+        <!-- Additional course details as needed -->
+      </div>
+    </main>
+
+    <!-- Course Chat Bot Section (visible only in the course detail page) -->
+    <div class="course-chatbot" id="courseChatbot">
+      <button class="chat-button" id="chatButton">💬</button>
+      <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+          <span>Chat with our AI assistant</span>
+          <button class="close-btn" id="closeChat">×</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot-message">
+            Hi! How can I help you with this course?
+          </div>
+        </div>
+        <div class="chat-input">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type your message..."
+          />
+          <button id="send-btn">Send</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

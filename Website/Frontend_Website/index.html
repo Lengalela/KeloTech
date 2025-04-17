@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>KeloTech - Home</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Your existing CSS remains as is -->
+    <script defer src="courses.js"></script>
+  </head>
+  <body>
+    <!-- Header/Profile Sidebar (using Sidebar 2 as in your styles.css) -->
+    <div class="sidebar2">
+      <a href="#"><img src="icons/image.png" alt="Profile" /></a>
+      <p id="welcomeMessage">Welcome <span id="usernameDisplay"></span> 👋</p>
+      <!-- Optionally display learner level here -->
+      <p id="learnerLevel">I'm a <b></b></p>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="main-left">
+      <!-- Enrolled Courses Section -->
+      <div class="enrolledC">
+        <h1>Enrolled Courses</h1>
+        <a href="#">View All</a>
+        <div class="courses" id="enrolledCoursesContainer">
+          <!-- Enrolled courses will load dynamically -->
+        </div>
+      </div>
+
+      <!-- All Available Courses Section -->
+      <div class="allC">
+        <h1>All Available Courses</h1>
+        <a href="#">View All</a>
+        <div class="courses" id="allCoursesContainer">
+          <!-- All courses will load dynamically -->
+        </div>
+      </div>
+
+      <!-- Optional popup dialog can remain here if needed -->
+      <div id="popup-dialog">
+        <h2>Enter your information:</h2>
+        <input type="text" id="name" placeholder="Name" />
+        <input type="email" id="email" placeholder="Email" />
+        <button id="submit-btn">Submit</button>
+        <button id="cancel-btn">Cancel</button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 KeloTech. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
