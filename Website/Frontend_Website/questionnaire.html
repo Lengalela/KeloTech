@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tech Interest Questionnaire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 15px;
+    }
+    .question label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .options {
+      margin-left: 20px;
+    }
+    .options input {
+      margin-right: 5px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #e7f3fe;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🌟 Tech Interest Questionnaire 🌟</h2>
+    <form id="questionnaire-form">
+      <div class="question">
+        <label>1. Do you enjoy solving puzzles and logic problems?</label>
+        <div class="options">
+          <input type="radio" name="puzzles" value="yes" required> Yes
+          <input type="radio" name="puzzles" value="no"> No
+        </div>
+      </div>
+
+      <div class="question">
+        <label>2. Do you prefer designing layouts and visuals?</label>
+        <div class="options">
+          <input type="radio" name="design" value="yes" required> Yes
+          <input type="radio" name="design" value="no"> No
+        </div>
+      </div>
+
+      <div class="question">
+        <label>3. Have you ever written any code before?</label>
+        <div class="options">
+          <input type="radio" name="code" value="yes" required> Yes
+          <input type="radio" name="code" value="no"> No
+        </div>
+      </div>
+
+      <div class="question">
+        <label>4. Would you like to create interactive web pages?</label>
+        <div class="options">
+          <input type="radio" name="interactive" value="yes" required> Yes
+          <input type="radio" name="interactive" value="no"> No
+        </div>
+      </div>
+
+      <div class="question">
+        <label>5. Are you interested in making animations or games?</label>
+        <div class="options">
+          <input type="radio" name="animations" value="yes" required> Yes
+          <input type="radio" name="animations" value="no"> No
+        </div>
+      </div>
+
+      <div class="question">
+        <label>6. Do you prefer structuring content over interactivity?</label>
+        <div class="options">
+          <input type="radio" name="structure" value="yes" required> Yes
+          <input type="radio" name="structure" value="no"> No
+        </div>
+      </div>
+
+      <button type="submit" class="qsubmit-btn">Submit</button>
+    </form>
+
+    <div id="recommendation" class="result"></div>
+  </div>
+
+  <!-- <script>
+    document
+      .getElementById('questionnaire-form')
+      .addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Collect answers
+        const fields = ['puzzles','design','code','interactive','animations','structure'];
+        const answers = fields.map((name, idx) => {
+          const val = document.querySelector(`input[name="${name}"]:checked`).value;
+          return { question: idx+1, answer: val };
+        });
+
+        // Show loading
+        const recDiv = document.getElementById('recommendation');
+        recDiv.style.display = 'block';
+        recDiv.style.color = 'inherit';
+        recDiv.innerText = '💬 Getting recommendation…';
+
+        // Send to backend
+        try {
+          const res = await fetch('http://localhost:5000/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ answers })
+          });
+          const js = await res.json();
+          recDiv.innerText = js.response;
+        } catch (err) {
+          recDiv.innerText = 'Error fetching recommendation.';
+          recDiv.style.color = 'red';
+        }
+      });
+  </script> -->
+  <script src="questionnare.js"></script>
+</body>
+</html>

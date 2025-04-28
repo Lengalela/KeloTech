@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript Quiz</title>
     <link rel="icon" type="image/x-icon" href="icons/Logo.jpg">
-    <link rel="stylesheet" href="styles.css">
-    <!-- <style>
+   <!--<link rel="stylesheet" href="styles.css">--> 
+     <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -128,7 +128,7 @@
             border-radius: 4px;
             overflow-x: auto;
         }
-    </style> -->
+    </style> 
 </head>
 <body>
     <div class="sidebar3">
@@ -454,84 +454,87 @@
             </div>
         </div>
     </main>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click event to all options
-            const options = document.querySelectorAll('.option');
-            options.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove selected class from all siblings
-                    const siblings = this.parentNode.querySelectorAll('.option');
-                    siblings.forEach(sib => {
-                        sib.classList.remove('selected');
-                    });
-                    
-                    // Add selected class to clicked option
-                    this.classList.add('selected');
-                });
+        document.addEventListener("DOMContentLoaded", () => {
+          // Simple rule-based feedback while AI is loading
+          function getFeedback(score, total) {
+            const pct = (score/total)*100;
+            if (pct === 100) return "🌟 Perfect! You nailed it!";
+            if (pct >= 80)  return "✅ Great job! A little more review and you'll be perfect.";
+            if (pct >= 50)  return "📝 Good effort! Keep practicing and you'll improve!";
+            return "📚 Let's review the material again and try once more!";
+          }
+        
+          // Wire up every quiz container
+          document.querySelectorAll(".quiz").forEach(quiz => {
+            const submitBtn = quiz.querySelector(".submit-btn");
+            const resultsDiv = quiz.querySelector(".results");
+            const answerKeyDiv = quiz.querySelector(".answer-key");
+        
+            // Option selection logic
+            quiz.querySelectorAll(".option").forEach(opt => {
+              opt.addEventListener("click", () => {
+                opt.parentNode.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+                opt.classList.add("selected");
+              });
             });
-            
-            // Add submit functionality to all quizzes
-            const submitButtons = document.querySelectorAll('.submit-btn');
-            submitButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const quiz = this.closest('.quiz');
-                    const questions = quiz.querySelectorAll('.question');
-                    let score = 0;
-                    let totalQuestions = questions.length;
-                    
-                    // Check each question
-                    questions.forEach(question => {
-                        const selectedOption = question.querySelector('.option.selected');
-                        if (selectedOption) {
-                            const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
-                            
-                            // Highlight correct/incorrect answers
-                            const options = question.querySelectorAll('.option');
-                            options.forEach(opt => {
-                                opt.classList.remove('correct', 'incorrect');
-                                if (opt.getAttribute('data-correct') === 'true') {
-                                    opt.classList.add('correct');
-                                } else if (opt === selectedOption && !isCorrect) {
-                                    opt.classList.add('incorrect');
-                                }
-                            });
-                            
-                            if (isCorrect) {
-                                score++;
-                            }
-                        }
-                    });
-                    
-                    // Show results
-                    const resultsDiv = quiz.querySelector('.results');
-                    resultsDiv.innerHTML = `
-                        <div class="score">You scored ${score} out of ${totalQuestions}</div>
-                        <p>${getFeedback(score, totalQuestions)}</p>
-                    `;
-                    resultsDiv.style.display = 'block';
-                    
-                    // Show answer key
-                    quiz.querySelector('.answer-key').style.display = 'block';
+        
+            // Submit button logic
+            submitBtn.addEventListener("click", async () => {
+              let score = 0;
+              const questions = quiz.querySelectorAll(".question");
+              const total = questions.length;
+        
+              // clear old highlights
+              quiz.querySelectorAll(".option").forEach(o => o.classList.remove("correct","incorrect"));
+        
+              // grade each question
+              questions.forEach(q => {
+                const sel = q.querySelector(".option.selected");
+                if (!sel) return;
+                const correct = sel.getAttribute("data-correct") === "true";
+                // highlight correct answer always
+                q.querySelectorAll(".option").forEach(o => {
+                  if (o.getAttribute("data-correct")==="true") o.classList.add("correct");
                 });
+                // highlight wrong selection
+                if (!correct) sel.classList.add("incorrect");
+                else score++;
+              });
+        
+              // show immediate rule-based feedback
+              resultsDiv.style.display = "block";
+              resultsDiv.innerHTML = `
+                <div class="score">You scored ${score} out of ${total}</div>
+                <div class="feedback-local">${getFeedback(score,total)}</div>
+                <div class="feedback-ai">💬 Fetching AI feedback…</div>
+              `;
+              answerKeyDiv.style.display = "block";
+        
+              // fetch AI feedback
+              try {
+                const res = await fetch("http://localhost:5000/chat", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    score: score,
+                    total: total,
+                    topic: quiz.querySelector("h2").innerText
+                  })
+                });
+                const js = await res.json();
+                // replace loading text with AI response
+                const aiDiv = resultsDiv.querySelector(".feedback-ai");
+                aiDiv.innerText = js.response;
+              } catch (e) {
+                const aiDiv = resultsDiv.querySelector(".feedback-ai");
+                aiDiv.innerText = "Error fetching AI feedback";
+                aiDiv.style.color = "red";
+              }
             });
-            
-            // Function to provide feedback based on score
-            function getFeedback(score, total) {
-                const percentage = (score / total) * 100;
-                
-                if (percentage >= 80) {
-                    return "Excellent work! You have a strong understanding of this material.";
-                } else if (percentage >= 60) {
-                    return "Good job! You understand most concepts but could review some areas.";
-                } else if (percentage >= 40) {
-                    return "Not bad! With some more practice, you'll improve significantly.";
-                } else {
-                    return "Keep practicing! Review the material and try again.";
-                }
-            }
+          });
         });
-    </script>
+        </script>
+        
 </body>
 </html>

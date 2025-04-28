@@ -1,51 +1,124 @@
 import os
+import traceback
+import time
+import logging
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import google.generativeai as genai
 
+# ─── Setup ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/chat": {"origins": "*"}})
 
+# Load API key from .env.local
 load_dotenv('.env.local')
 GOOGLE_API_KEY = os.getenv("API_KEY")
 
-genai.configure(api_key=GOOGLE_API_KEY) # Configure here, it handles missing key gracefully
+# Logging
+logging.basicConfig(level=logging.INFO)
 
-model = None  # Initialize model outside the if block
+# Initialize Gemini model
+model = None
 if GOOGLE_API_KEY:
     try:
+        genai.configure(api_key=GOOGLE_API_KEY)
         model = genai.GenerativeModel('gemini-1.5-pro-latest')
+        logging.info("✅ Gemini model initialized successfully.")
     except Exception as e:
-        print(f"Error initializing Gemini model: {e}")
+        logging.error(f"❌ Error initializing Gemini model: {e}")
 else:
-    print("Warning: Google API key not found. Kelotech won't be able to chat! 🔑 Missing!")
+    logging.warning("⚠️ API_KEY not found; AI features disabled.")
 
-def generate_response(prompt):
-    """Generates a response from the Gemini model with persona and name."""
-    persona = """You are Kelotech, a helpful, friendly, and energetic learning assistant for an e-learning platform for K8–K10 students. Your main jobs are to:
-1. Explain HTML, CSS, and JavaScript concepts in a fun and simple way.
-2. Guide students to the right course based on their answers to a questionnaire.
-3. Encourage learning and celebrate progress with emojis and positivity.
-4. Speak in a way that's clear and engaging for young teens."""
-    enhanced_prompt = f"{persona}\n\nStudent's question/request: {prompt}"
-    if model:
-        try:
-            response = model.generate_content(enhanced_prompt)
-            return response.text
-        except Exception as e:
-            return f"An error occurred in generate_response: {e}"
-    else:
-        return "Hi there! I'm Kelotech, but I'm not quite ready to chat yet. Please make sure the API key is set! 🔑"
+# ─── Helpers ──────────────────────────────────────────────────────────────
+def build_prompt(student_prompt: str) -> str:
+    persona = """You are Kelotech, a helpful, friendly learning assistant for K8-K10 students. Your tasks:
+1. Explain programming concepts in a fun, simple way
+2. Provide personalized quiz feedback and recommendations
+3. Suggest review topics and next learning steps
+4. Use emojis and positive encouragement
+5. Adapt responses to the quiz topic and student's performance"""
+    return f"{persona}\n\nStudent's request: {student_prompt}"
 
+def generate_response(prompt: str) -> str:
+    """Send prompt to Gemini and return text (no retry)."""
+    if not model:
+        return "AI service unavailable"
+    enhanced = build_prompt(prompt)
+    try:
+        resp = model.generate_content(enhanced)
+        return getattr(resp, 'text', "Error reading AI response")
+    except Exception:
+        logging.error(traceback.format_exc())
+        return "AI error occurred"
+
+def generate_response_with_retry(prompt: str, retries: int = 3, delay: int = 2) -> str:
+    """Retry wrapper around generate_response."""
+    for attempt in range(retries):
+        out = generate_response(prompt)
+        if not out.startswith("AI error"):
+            return out
+        time.sleep(delay)
+    return "Sorry, AI service temporarily unavailable."
+
+# ─── API Endpoint ─────────────────────────────────────────────────────────
 @app.route('/chat', methods=['POST'])
 def chat():
-    data = request.get_json()
-    user_message = data.get('message')
-    if user_message:
-        ai_response = generate_response(user_message)
-        return jsonify({'response': ai_response})
-    return jsonify({'error': 'Oops! Kelotech couldn\'t process that request right now. 🙁'}), 400
+    data = request.get_json() or {}
 
+    # 1) Quiz feedback path (score/total)
+    if 'score' in data and 'total' in data:
+        try:
+            score = int(data['score'])
+            total = int(data['total'])
+            if total <= 0:
+                return jsonify(error="Invalid total questions"), 400
+
+            pct = (score / total) * 100
+            levels = [
+                (100, "perfect score! 🎯 Suggest advanced topics for {topic}."),
+                (80,  "great score! 😎 Suggest review areas and next steps for {topic}."),
+                (50,  "good attempt! 💪 Suggest specific {topic} concepts to practice."),
+                (0,   "practice needed! 🌱 Suggest fundamental {topic} concepts.")
+            ]
+            levels.sort(reverse=True)
+
+            topic = data.get('topic', 'this quiz')
+            for lvl, msg in levels:
+                if pct >= lvl:
+                    prompt = f"I scored {score}/{total} on {topic}. {msg.format(topic=topic)}"
+                    break
+
+            ai_text = generate_response_with_retry(prompt)
+            return jsonify(response=ai_text)
+
+        except Exception as e:
+            logging.error(traceback.format_exc())
+            return jsonify(error=str(e)), 500
+
+    # 2) Questionnaire path (answers array)
+    answers = data.get('answers')
+    if isinstance(answers, list):
+        # Build a descriptive prompt
+        prompt = "Student completed a questionnaire with these responses:\n"
+        for qa in answers:
+            qnum = qa.get('question')
+            ans  = qa.get('answer')
+            prompt += f"Q{qnum}: {ans}\n"
+        prompt += (
+            "\nBased on these responses, recommend which course(s) the student should take next "
+            "— JavaScript, CSS, or HTML — and explain why."
+        )
+        ai_text = generate_response_with_retry(prompt)
+        return jsonify(response=ai_text)
+
+    # 3) Free-form chat path
+    if 'message' in data:
+        ai_text = generate_response_with_retry(data['message'])
+        return jsonify(response=ai_text)
+
+    return jsonify(error="Invalid request"), 400
+
+# ─── Main ──────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
