@@ -508,3 +508,22 @@ button:hover {
 .confirm-btn:hover, .skip-btn:hover {
     background-color: #0b7dda;
 }
+
+.logout-container {
+    margin-top: auto;       /* pushes it to the bottom of sidebar */
+    padding: 1rem 0;
+    text-align: center;
+  }
+  .logout-button {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+  .logout-button:hover {
+    background: #c53030;
+  }
+  

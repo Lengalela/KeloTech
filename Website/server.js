@@ -24,10 +24,11 @@ app.use(express.json());
 
 // Serve static files from the Frontend_website folder
 app.use(express.static(path.join(__dirname, "Frontend_website")));
+app.use('/ace', express.static(path.join(__dirname, 'node_modules', 'ace-builds', 'src-noconflict')));
 
 // Define the default route to serve login.html (or index.html if that's preferred)
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "Frontend_website", "login.html"));
+  res.sendFile(path.join(__dirname, "Frontend_website", "home.html"));
 });
 
 // API Routes
