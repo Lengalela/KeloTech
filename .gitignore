@@ -1,3 +1,5 @@
 
 node_modules
 Website/database.js
+package-lock.json
+package.json
