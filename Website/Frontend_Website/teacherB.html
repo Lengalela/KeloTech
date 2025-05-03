@@ -6,7 +6,7 @@
     <title>Teacher Dashboard</title>
     <style>
         :root {
-            --primary: #4a6fa5;
+            --primary: #a5340c;
             --secondary: #6c757d;
             --success: #28a745;
             --info: #17a2b8;
@@ -305,9 +305,9 @@
             <div class="classroom-controls">
                 <select id="classroomSelect">
                     <option value="">Select a classroom</option>
-                    <option value="math101">Math 101 - Period 1</option>
-                    <option value="math201">Math 201 - Period 2</option>
-                    <option value="advmath">Advanced Math - Period 3</option>
+                    <option value="math101">Math 1a</option>
+                    <option value="math201">Math 2a</option>
+                    <option value="advmath">Applied Statistics</option>
                 </select>
                 <button id="editProfileBtn" class="edit-toggle">Edit Profile</button>
             </div>
@@ -361,7 +361,7 @@
         // Sample data for classrooms and students
         const classroomData = {
             math101: {
-                name: "Math 101 - Period 1",
+                name: "Math 1a",
                 subject: "Algebra Fundamentals",
                 students: [
                     { id: 1, name: "Alex Johnson", progress: 75 },
@@ -372,7 +372,7 @@
                 ]
             },
             math201: {
-                name: "Math 201 - Period 2",
+                name: "Math 2a",
                 subject: "Geometry",
                 students: [
                     { id: 6, name: "Riley Miller", progress: 82 },
@@ -382,7 +382,7 @@
                 ]
             },
             advmath: {
-                name: "Advanced Math - Period 3",
+                name: "Applied Statistics",
                 subject: "Calculus",
                 students: [
                     { id: 10, name: "Peyton Anderson", progress: 89 },
