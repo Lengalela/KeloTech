@@ -1,540 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript Quiz</title>
-    <link rel="icon" type="image/x-icon" href="icons/Logo.jpg">
-   <!--<link rel="stylesheet" href="styles.css">--> 
-     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .sidebar3 {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-        }
-        
-        .sidebar3 a {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        
-        .sidebar3 a:hover {
-            background-color: #45a049;
-        }
-        
-        .main-right {
-            margin-left: 100px;
-            max-width: 800px;
-        }
-        
-        .quiz {
-            background-color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        h2, h3, h4 {
-            color: #333;
-        }
-        
-        .question {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .options {
-            margin-left: 20px;
-        }
-        
-        .option {
-            margin: 8px 0;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-        }
-        
-        .option:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .option.selected {
-            background-color: #d4edda;
-        }
-        
-        .option.correct {
-            background-color: #d4edda;
-            font-weight: bold;
-        }
-        
-        .option.incorrect {
-            background-color: #f8d7da;
-        }
-        
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        
-        button:hover {
-            background-color: #45a049;
-        }
-        
-        .results {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 4px;
-            background-color: #e7f3fe;
-            display: none;
-        }
-        
-        .answer-key {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-            display: none;
-        }
-        
-        .score {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        pre {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
-    </style> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JavaScript Quiz</title>
+  <link rel="icon" href="icons/Logo.jpg">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .sidebar3 {
+      position: fixed;
+      left: 20px; top: 20px;
+    }
+    .sidebar3 a {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .sidebar3 a:hover { background-color: #45a049; }
+    .main-right {
+      margin-left: 100px;
+      max-width: 800px;
+    }
+    .quiz {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .quiz h2 {
+      color: #333;
+      margin-top: 0;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question h4 {
+      margin: 0 0 8px;
+      font-weight: bold;
+    }
+    .answer {
+      margin: 0 0 16px;
+      padding-left: 8px;
+    }
+    .options {
+      margin-left: 20px;
+    }
+    .option {
+      margin: 8px 0;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .option:hover { background-color: #f0f0f0; }
+    .option.selected { background-color: #d4edda; }
+    .option.correct  { background-color: #d4edda; font-weight: bold; }
+    .option.incorrect{ background-color: #f8d7da; }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover { background-color: #45a049; }
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e7f3fe;
+      border-radius: 4px;
+      display: none;
+    }
+    .answer-key {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      display: none;
+    }
+    .score {
+      font-size: 18px; font-weight: bold;
+      margin-bottom: 10px;
+    }
+    pre {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="sidebar3">
-        <a href="index.html">Go Back</a>
-    </div>
+  <div class="sidebar3">
+    <a href="index.html">Go Back</a>
+  </div>
+  <main class="main-right">
+    <div id="quiz1" class="quiz"></div>
+  </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // rule-based feedback
+      function getFeedback(score, total) {
+        const pct = (score/total)*100;
+        if (pct === 100) return "🌟 Perfect! You nailed it!";
+        if (pct >= 80)  return "✅ Great job! A little more review and you'll be perfect.";
+        if (pct >= 50)  return "📝 Good effort! Keep practicing and you'll improve!";
+        return "📚 Let's review the material again and try once more!";
+      }
 
-    <main class="main-right">
-        <div class="quiz" id="quiz1">
-            <h2>Quiz Questions G8</h2>
-            
-            <div class="question">
-                <h4>1. What is JavaScript used for?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Designing web pages</div>
-                    <div class="option" data-correct="true">b) Making web pages interactive</div>
-                    <div class="option" data-correct="false">c) Storing data</div>
-                    <div class="option" data-correct="false">d) Writing server-side code only</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>2. Which of the following is a real-world example of JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Google Docs formatting text</div>
-                    <div class="option" data-correct="true">b) Google Maps displaying dynamic locations</div>
-                    <div class="option" data-correct="false">c) Microsoft Word saving a document</div>
-                    <div class="option" data-correct="false">d) An Excel spreadsheet formula</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>3. Which tag is used to add JavaScript inside an HTML file?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) &lt;java&gt;</div>
-                    <div class="option" data-correct="true">b) &lt;script&gt;</div>
-                    <div class="option" data-correct="false">c) &lt;js&gt;</div>
-                    <div class="option" data-correct="false">d) &lt;code&gt;</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>4. What will this code do?</h4>
-                <pre><code>&lt;script&gt;
-    alert("Welcome to JavaScript!");
-    &lt;/script&gt;</code></pre>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Print text on the web page</div>
-                    <div class="option" data-correct="true">b) Show an alert box with a message</div>
-                    <div class="option" data-correct="false">c) Change the background color</div>
-                    <div class="option" data-correct="false">d) Do nothing</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>5. How do you display a pop-up asking for the user's name?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) window.ask("Enter your name:")</div>
-                    <div class="option" data-correct="false">b) alert("Enter your name:")</div>
-                    <div class="option" data-correct="true">c) prompt("Enter your name:")</div>
-                    <div class="option" data-correct="false">d) input("Enter your name:")</div>
-                </div>
-            </div>
-            
-            <button class="submit-btn">Submit Quiz</button>
-            <div class="results"></div>
-            <div class="answer-key">
-                <h3>Answer Key:</h3>
-                <p>1 - b, 2 - b, 3 - b, 4 - b, 5 - c</p>
-            </div>
-        </div>
+      // load context & lesson
+      const ctx = JSON.parse(localStorage.getItem("currentQuizContext")||"{}");
+      if (!ctx.lessonId) { window.location.href="index.html"; return; }
+      const lesson = JSON.parse(localStorage.getItem("currentLesson")||"{}");
+      if (!lesson.content) {
+        alert("No quiz for this lesson."); window.location.href="index.html"; return;
+      }
 
-        <div class="quiz" id="quiz2">
-            <h2>Quiz: JavaScript Functions</h2>
-            
-            <div class="question">
-                <h4>1. What is the primary purpose of a function in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) To make the website look good</div>
-                    <div class="option" data-correct="false">b) To store large amounts of data</div>
-                    <div class="option" data-correct="true">c) To perform a specific task and be reused</div>
-                    <div class="option" data-correct="false">d) To style the webpage</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>2. Which of the following is a real-world example of using a JavaScript function?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Adding a border to an image using CSS</div>
-                    <div class="option" data-correct="true">b) Checking if a user entered a valid email in a form</div>
-                    <div class="option" data-correct="false">c) Saving data on the server</div>
-                    <div class="option" data-correct="false">d) Changing the font color of text on the webpage</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>3. How do you define a function in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) function myFunction;</div>
-                    <div class="option" data-correct="true">b) function myFunction() {}</div>
-                    <div class="option" data-correct="false">c) function: myFunction();</div>
-                    <div class="option" data-correct="false">d) myFunction = function() {}</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>4. What will this JavaScript code do?</h4>
-                <pre><code>&lt;button onclick="showMessage('Welcome to JavaScript!')"&gt;Click Me&lt;/button&gt;
-        &lt;script&gt;
-        function showMessage(message) {
-            alert(message);
-        }
-        &lt;/script&gt;</code></pre>
-                <div class="options">
-                    <div class="option" data-correct="true">a) Display a welcome message when the button is clicked</div>
-                    <div class="option" data-correct="false">b) Change the color of the button when clicked</div>
-                    <div class="option" data-correct="false">c) Multiply two numbers when the button is clicked</div>
-                    <div class="option" data-correct="false">d) Nothing will happen</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>5. Which of the following is an example of using a function with parameters?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) function greet() { alert("Hello!"); }</div>
-                    <div class="option" data-correct="false">b) function greet(name) { alert("Hello, " + name + "!"); }</div>
-                    <div class="option" data-correct="false">c) function greet(name, age) { alert("Hello, " + name + " who is " + age + " years old!"); }</div>
-                    <div class="option" data-correct="true">d) Both b and c</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>6. What does the following JavaScript function do?</h4>
-                <pre><code>function multiplyNumbers(a, b) {
-            let result = a * b;
-            alert(result);
-        }</code></pre>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Adds two numbers</div>
-                    <div class="option" data-correct="false">b) Divides two numbers</div>
-                    <div class="option" data-correct="true">c) Multiplies two numbers</div>
-                    <div class="option" data-correct="false">d) Subtracts two numbers</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>7. How can you modify the function sayHello() to say "Good morning, Grade 9 learners"?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) alert("Good morning, Grade 9 learners!");</div>
-                    <div class="option" data-correct="false">b) function sayHello() { alert("Good morning, Grade 9 learners!"); }</div>
-                    <div class="option" data-correct="false">c) sayHello("Good morning, Grade 9 learners!");</div>
-                    <div class="option" data-correct="true">d) Both a and b</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>8. What type of value does a function with parameters return?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Always a number</div>
-                    <div class="option" data-correct="false">b) Always a string</div>
-                    <div class="option" data-correct="true">c) It depends on the function's task</div>
-                    <div class="option" data-correct="false">d) It always returns nothing</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>9. Which statement about functions is TRUE?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Functions can only be used once</div>
-                    <div class="option" data-correct="true">b) Functions are used to repeat tasks multiple times</div>
-                    <div class="option" data-correct="false">c) Functions are only used in backend programming</div>
-                    <div class="option" data-correct="false">d) Functions cannot have parameters</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>10. What is the output of the following code?</h4>
-                <pre><code>&lt;button onclick="addTwoNumbers()"&gt;Click Me&lt;/button&gt;
-        &lt;script&gt;
-        function addTwoNumbers() {
-            let num1 = 5;
-            let num2 = 10;
-            let sum = num1 + num2;
-            alert(sum);
-        }
-        &lt;/script&gt;</code></pre>
-                <div class="options">
-                    <div class="option" data-correct="true">a) 15</div>
-                    <div class="option" data-correct="false">b) 5</div>
-                    <div class="option" data-correct="false">c) 10</div>
-                    <div class="option" data-correct="false">d) Nothing</div>
-                </div>
-            </div>
-            
-            <button class="submit-btn">Submit Quiz</button>
-            <div class="results"></div>
-            <div class="answer-key">
-                <h3>Answer Key:</h3>
-                <p>1 - c, 2 - b, 3 - b, 4 - a, 5 - d, 6 - c, 7 - d, 8 - c, 9 - b, 10 - a</p>
-            </div>
-        </div>
+      let content = lesson.content;
+      if (typeof content === "string") content = JSON.parse(content);
+      const quizBlock = (content.contentBlocks||[]).find(b=>b.type==="quiz");
+      if (!quizBlock) {
+        alert("No quiz in this lesson."); window.location.href="index.html"; return;
+      }
 
-        <div class="quiz" id="quiz3">
-            <h2>Quiz: Working with Arrays and Objects in JavaScript</h2>
-            
-            <div class="question">
-                <h4>1. What is an array in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) A collection of key-value pairs</div>
-                    <div class="option" data-correct="false">b) A collection of unordered values</div>
-                    <div class="option" data-correct="true">c) A collection of ordered values</div>
-                    <div class="option" data-correct="false">d) A function used to store data</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>2. How do you access the first element in an array?</h4>
-                <div class="options">
-                    <div class="option" data-correct="true">a) array[0]</div>
-                    <div class="option" data-correct="false">b) array[1]</div>
-                    <div class="option" data-correct="false">c) array[1st]</div>
-                    <div class="option" data-correct="false">d) array.first()</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>3. What is an object in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) A function that performs a specific task</div>
-                    <div class="option" data-correct="true">b) A collection of key-value pairs</div>
-                    <div class="option" data-correct="false">c) A list of numbers</div>
-                    <div class="option" data-correct="false">d) A type of array</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>4. Which method is used to add an item to the end of an array?</h4>
-                <div class="options">
-                    <div class="option" data-correct="true">a) push()</div>
-                    <div class="option" data-correct="false">b) pop()</div>
-                    <div class="option" data-correct="false">c) shift()</div>
-                    <div class="option" data-correct="false">d) unshift()</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>5. What will the following code display?</h4>
-                <pre><code>let car = {
-        make: "Tesla",
-        model: "Model 3",
-        year: 2021
-    };
-    car.color = "blue";
-    console.log(car.color);</code></pre>
-                <div class="options">
-                    <div class="option" data-correct="false">a) undefined</div>
-                    <div class="option" data-correct="true">b) blue</div>
-                    <div class="option" data-correct="false">c) Model 3</div>
-                    <div class="option" data-correct="false">d) Tesla</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>6. How can you loop through an array of objects to display each object's property in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Using a for loop</div>
-                    <div class="option" data-correct="false">b) Using forEach()</div>
-                    <div class="option" data-correct="false">c) Using a while loop</div>
-                    <div class="option" data-correct="true">d) All of the above</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>7. Which of the following is true about arrays in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Arrays are unordered collections</div>
-                    <div class="option" data-correct="false">b) Arrays are indexed by strings</div>
-                    <div class="option" data-correct="true">c) Arrays can store values of different data types</div>
-                    <div class="option" data-correct="false">d) Arrays can only store numbers</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>8. What does the push() method do when applied to an array?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) Adds an element to the beginning of the array</div>
-                    <div class="option" data-correct="true">b) Adds an element to the end of the array</div>
-                    <div class="option" data-correct="false">c) Removes an element from the beginning of the array</div>
-                    <div class="option" data-correct="false">d) Removes an element from the end of the array</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>9. How do you access a property of an object in JavaScript?</h4>
-                <div class="options">
-                    <div class="option" data-correct="false">a) object.propertyName</div>
-                    <div class="option" data-correct="false">b) object[propertyName]</div>
-                    <div class="option" data-correct="true">c) Both a and b</div>
-                    <div class="option" data-correct="false">d) None of the above</div>
-                </div>
-            </div>
-            
-            <div class="question">
-                <h4>10. Given the following code, what will be displayed?</h4>
-                <pre><code>let students = [
-        { name: "Alice", age: 17 },
-        { name: "Bob", age: 18 }
-    ];
-    students.push({ name: "Charlie", age: 16 });
-    console.log(students[2].name);</code></pre>
-                <div class="options">
-                    <div class="option" data-correct="true">a) Charlie</div>
-                    <div class="option" data-correct="false">b) Bob</div>
-                    <div class="option" data-correct="false">c) Alice</div>
-                    <div class="option" data-correct="false">d) undefined</div>
-                </div>
-            </div>
-            
-            <button class="submit-btn">Submit Quiz</button>
-            <div class="results"></div>
-            <div class="answer-key">
-                <h3>Answer Key:</h3>
-                <p>1 - c, 2 - a, 3 - b, 4 - a, 5 - b, 6 - d, 7 - c, 8 - b, 9 - c, 10 - a</p>
-            </div>
-        </div>
-    </main>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          // Simple rule-based feedback while AI is loading
-          function getFeedback(score, total) {
-            const pct = (score/total)*100;
-            if (pct === 100) return "🌟 Perfect! You nailed it!";
-            if (pct >= 80)  return "✅ Great job! A little more review and you'll be perfect.";
-            if (pct >= 50)  return "📝 Good effort! Keep practicing and you'll improve!";
-            return "📚 Let's review the material again and try once more!";
-          }
-        
-          // Wire up every quiz container
-          document.querySelectorAll(".quiz").forEach(quiz => {
-            const submitBtn = quiz.querySelector(".submit-btn");
-            const resultsDiv = quiz.querySelector(".results");
-            const answerKeyDiv = quiz.querySelector(".answer-key");
-        
-            // Option selection logic
-            quiz.querySelectorAll(".option").forEach(opt => {
-              opt.addEventListener("click", () => {
-                opt.parentNode.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
-                opt.classList.add("selected");
-              });
-            });
-        
-            // Submit button logic
-            submitBtn.addEventListener("click", async () => {
-              let score = 0;
-              const questions = quiz.querySelectorAll(".question");
-              const total = questions.length;
-        
-              // clear old highlights
-              quiz.querySelectorAll(".option").forEach(o => o.classList.remove("correct","incorrect"));
-        
-              // grade each question
-              questions.forEach(q => {
-                const sel = q.querySelector(".option.selected");
-                if (!sel) return;
-                const correct = sel.getAttribute("data-correct") === "true";
-                // highlight correct answer always
-                q.querySelectorAll(".option").forEach(o => {
-                  if (o.getAttribute("data-correct")==="true") o.classList.add("correct");
-                });
-                // highlight wrong selection
-                if (!correct) sel.classList.add("incorrect");
-                else score++;
-              });
-        
-              // show immediate rule-based feedback
-              resultsDiv.style.display = "block";
-              resultsDiv.innerHTML = `
-                <div class="score">You scored ${score} out of ${total}</div>
-                <div class="feedback-local">${getFeedback(score,total)}</div>
-                <div class="feedback-ai">💬 Fetching AI feedback…</div>
-              `;
-              answerKeyDiv.style.display = "block";
-        
-              // fetch AI feedback
-              try {
-                const res = await fetch("http://localhost:5000/chat", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    score: score,
-                    total: total,
-                    topic: quiz.querySelector("h2").innerText
-                  })
-                });
-                const js = await res.json();
-                // replace loading text with AI response
-                const aiDiv = resultsDiv.querySelector(".feedback-ai");
-                aiDiv.innerText = js.response;
-              } catch (e) {
-                const aiDiv = resultsDiv.querySelector(".feedback-ai");
-                aiDiv.innerText = "Error fetching AI feedback";
-                aiDiv.style.color = "red";
-              }
-            });
-          });
+      // derive title "Lesson X Quiz"
+      let title = quizBlock.title;
+      if (title.startsWith("Quiz:")) {
+        title = title.split(":")[1].trim() + " Quiz";
+      }
+
+      const container = document.getElementById("quiz1");
+      container.innerHTML = "<h2>" + title + "</h2>";
+
+      // parse raw HTML
+      const tmp = document.createElement("div");
+      tmp.innerHTML = quizBlock.content;
+      const lis = Array.from(tmp.querySelectorAll("ol>li"));
+      const isMCQ = lis.some(li=> li.querySelector("ul"));
+
+      if (!isMCQ) {
+        // Q&A style
+        lis.forEach(function(li,i){
+          const qText = li.childNodes[0].textContent.trim();
+          const em = li.querySelector("em");
+          let ans = "";
+          if (em && em.nextSibling) ans = em.nextSibling.textContent.trim();
+          const qDiv = document.createElement("div");
+          qDiv.className = "question";
+          qDiv.innerHTML =
+            "<h4>" + (i+1) + ". " + qText + "</h4>" +
+            "<div class='answer'>" + ans + "</div>";
+          container.appendChild(qDiv);
         });
-        </script>
-        
+        return;
+      }
+
+      // MCQ style
+      // collect correct answers
+      const answerKey = [];
+      lis.forEach(li=>{
+        li.querySelectorAll("ul>li").forEach(opt=>{
+          if (opt.querySelector("strong")) {
+            answerKey.push(opt.textContent.trim());
+          }
+        });
+      });
+
+      // render questions
+      lis.forEach(function(li,i){
+        const qText = li.childNodes[0].textContent.trim();
+        const qDiv = document.createElement("div");
+        qDiv.className = "question";
+        qDiv.innerHTML = "<h4>" + (i+1) + ". " + qText + "</h4>";
+
+        // clone any code snippets
+        li.querySelectorAll("pre").forEach(function(pre){
+          qDiv.appendChild(pre.cloneNode(true));
+        });
+
+        // options
+        const optsContainer = document.createElement("div");
+        optsContainer.className = "options";
+        li.querySelectorAll("ul>li").forEach(function(optLi){
+          const text = optLi.textContent.trim();
+          const correct = !!optLi.querySelector("strong");
+          const odiv = document.createElement("div");
+          odiv.className = "option";
+          odiv.dataset.correct = correct;
+          odiv.textContent = text;
+          odiv.addEventListener("click", function(){
+            optsContainer.querySelectorAll(".option")
+              .forEach(o=>o.classList.remove("selected"));
+            odiv.classList.add("selected");
+          });
+          optsContainer.appendChild(odiv);
+        });
+        qDiv.appendChild(optsContainer);
+        container.appendChild(qDiv);
+      });
+
+      // append submit/results/answer-key
+      container.insertAdjacentHTML("beforeend",
+        '<button class="submit-btn">Submit Quiz</button>' +
+        '<div class="results"></div>' +
+        '<div class="answer-key">' +
+          '<h3>Answer Key:</h3>' +
+          '<p>' + answerKey.map((a,i)=> (i+1) + ' – ' + a).join(', ') + '</p>' +
+        '</div>'
+      );
+
+      const submitBtn    = container.querySelector(".submit-btn");
+      const resultsDiv   = container.querySelector(".results");
+      const answerKeyDiv = container.querySelector(".answer-key");
+
+      submitBtn.addEventListener("click", function(){
+        let score = 0;
+        const questions = container.querySelectorAll(".question");
+        questions.forEach(function(qDiv){
+          const opts = qDiv.querySelectorAll(".option");
+          opts.forEach(function(o){
+            if (o.dataset.correct==="true") o.classList.add("correct");
+          });
+          const sel = qDiv.querySelector(".option.selected");
+          if (sel) {
+            if (sel.dataset.correct==="true") score++;
+            else sel.classList.add("incorrect");
+          }
+        });
+
+        const total = questions.length;
+        resultsDiv.style.display = "block";
+        resultsDiv.innerHTML =
+          '<div class="score">You scored ' + score + ' out of ' + total + '</div>' +
+          '<div class="feedback-local">' + getFeedback(score,total) + '</div>' +
+          '<div class="feedback-ai">💬 Fetching AI feedback…</div>';
+        answerKeyDiv.style.display = "block";
+
+        fetch("http://localhost:5000/chat", {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({score,total,topic:title})
+        })
+        .then(r=>r.json())
+        .then(js=>{
+          resultsDiv.querySelector(".feedback-ai").innerText = js.response;
+        })
+        .catch(()=>{
+          const aiDiv = resultsDiv.querySelector(".feedback-ai");
+          aiDiv.innerText = "Error fetching AI feedback";
+          aiDiv.style.color = "red";
+        });
+      });
+
+    });
+  </script>
 </body>
 </html>

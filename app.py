@@ -32,7 +32,7 @@ else:
 
 # ─── Helpers ──────────────────────────────────────────────────────────────
 def build_prompt(student_prompt: str) -> str:
-    persona = """You are Kelotech, a helpful, friendly learning assistant for K8-K10 students. Your tasks:
+    persona = """You are Kelotech, a helpful, concise (4 Sentences or less unless necessary) and clear (with certainty) friendly learning assistant for K8-K10 students. Your tasks:
 1. Explain programming concepts in a fun, simple way
 2. Provide personalized quiz feedback and recommendations
 3. Suggest review topics and next learning steps
@@ -43,23 +43,25 @@ def build_prompt(student_prompt: str) -> str:
 def generate_response(prompt: str) -> str:
     """Send prompt to Gemini and return text (no retry)."""
     if not model:
-        return "AI service unavailable"
+        logging.warning("AI model is unavailable. Returning default suggestion.")
+        return "🤖 AI is currently offline. Based on your answers, we recommend starting with HTML or JavaScript to build your foundation in web development. 🚀"
+
     enhanced = build_prompt(prompt)
     try:
         resp = model.generate_content(enhanced)
         return getattr(resp, 'text', "Error reading AI response")
     except Exception:
         logging.error(traceback.format_exc())
-        return "AI error occurred"
+        return "⚠️ An error occurred while generating the AI response. Please try again later."
 
 def generate_response_with_retry(prompt: str, retries: int = 3, delay: int = 2) -> str:
     """Retry wrapper around generate_response."""
     for attempt in range(retries):
         out = generate_response(prompt)
-        if not out.startswith("AI error"):
+        if not out.startswith("⚠️ An error"):
             return out
         time.sleep(delay)
-    return "Sorry, AI service temporarily unavailable."
+    return "Sorry, AI service is temporarily unavailable. Try again later."
 
 # ─── API Endpoint ─────────────────────────────────────────────────────────
 @app.route('/chat', methods=['POST'])
@@ -99,7 +101,6 @@ def chat():
     # 2) Questionnaire path (answers array)
     answers = data.get('answers')
     if isinstance(answers, list):
-        # Build a descriptive prompt
         prompt = "Student completed a questionnaire with these responses:\n"
         for qa in answers:
             qnum = qa.get('question')
@@ -107,7 +108,7 @@ def chat():
             prompt += f"Q{qnum}: {ans}\n"
         prompt += (
             "\nBased on these responses, recommend which course(s) the student should take next "
-            "— JavaScript, CSS, or HTML — and explain why."
+            "— JavaScript, CSS, HTML, or Java — and explain why."
         )
         ai_text = generate_response_with_retry(prompt)
         return jsonify(response=ai_text)

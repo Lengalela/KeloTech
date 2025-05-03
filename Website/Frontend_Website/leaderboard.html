@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="lb.css">
+</head>
+<body>
+
+    <div class="sidebar2">
+        <a href="#"><img src="icons/image.png" alt="Profile" /></a>
+        <p id="welcomeMessage">Welcome <span id="usernameDisplay"></span> 👋</p>
+        <!-- Optionally display learner level here -->
+        <p id="learnerLevel">I'm a <b></b></p>
+        <div class="logout-container">
+            <button id="backButton" class="back-button">← Back</button>
+            <button id="logoutBtn" class="logout-button">Log Out</button>
+        </div>
+  
+    </div>
+
+    <div class="container">
+        <h1>🏆 Leaderboard</h1>
+        
+        <div class="time-period">
+            <button class="active" data-period="daily">Daily</button>
+            <button data-period="weekly">Weekly</button>
+            <button data-period="monthly">Monthly</button>
+            <button data-period="all">All Time</button>
+        </div>
+        
+        <div class="search">
+            <input type="text" placeholder="Search for a user..." id="searchInput">
+        </div>
+        
+        <div class="leaderboard-header">
+            <div class="rank">Rank</div>
+            <div class="user">User</div>
+            <div class="score">Points</div>
+            <div class="badges">Badges</div>
+        </div>
+        
+        <div id="leaderboard-entries">
+            <!-- Dynamic content will be inserted here -->
+            <div class="loading">Loading leaderboard...</div>
+        </div>
+    </div>
+    <script src="lb.js"></script>
+</body>
+</html>

@@ -1,207 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Course Detail – KeloTech</title>
-    <link rel="stylesheet" href="styles.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Detail – KeloTech</title>
+  <link rel="stylesheet" href="styles.css" />
 
-    <!-- CodeMirror core CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@codemirror/basic-setup@^0.19.0/dist/index.css"
-    />
+  <!-- Ace Editor -->
+  <script src="/ace/ace.js"></script>
 
-    <!-- CodeMirror ESM modules -->
-    <script type="module">
-      import {
-        EditorView,
-        basicSetup,
-      } from "https://unpkg.com/@codemirror/basic-setup@^0.19.0?module";
-      import { javascript } from "https://unpkg.com/@codemirror/lang-javascript@^0.19.0?module";
-      import { html } from "https://unpkg.com/@codemirror/lang-html@^0.19.0?module";
-      import { css } from "https://unpkg.com/@codemirror/lang-css@^0.19.0?module";
+  <script>
+    // Ace Editor - Create Editor Function
+    window.createEditor = (parent, code, lang) => {
+      const editor = ace.edit(parent);
+      editor.setTheme("ace/theme/monokai");
+      if (lang === "html") {
+        editor.session.setMode("ace/mode/html");
+      } else if (lang === "css") {
+        editor.session.setMode("ace/mode/css");
+      } else {
+        editor.session.setMode("ace/mode/javascript");
+      }
+      editor.setOptions({
+        fontSize: "14pt",
+        wrap: true,
+        showPrintMargin: false,
+      });
+      editor.setValue(code, -1); // keep cursor at start
+      return editor;
+    };
+  </script>
 
-      window.createEditor = (parent, code, lang) =>
-        new EditorView({
-          doc: code,
-          extensions: [
-            basicSetup,
-            lang === "js"
-              ? javascript()
-              : lang === "html"
-              ? html()
-              : lang === "css"
-              ? css()
-              : [],
-          ],
-          parent,
-        });
-    </script>
+  <style>
+    /* Sidebar styles */
+    .sidebar3 {
+      width: 250px;
+      background: #333;
+      color: #fff;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      padding: 1em;
+      overflow-y: auto;
+    }
+    .sidebar3 h2 {
+      margin-top: 1em;
+      color: #fff;
+    }
+    .lesson-item {
+      padding: 0.5em;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .lesson-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .lesson-item.selected {
+      background: #cceeff;
+      color: #000;
+    }
+    .lesson-item.locked {
+      opacity: 0.5;
+      cursor: default;
+    }
 
-    <style>
-      /* Sidebar styles */
-      .sidebar3 {
-        width: 250px;
-        background: #333;
-        color: #fff;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        padding: 1em;
-        overflow-y: auto;
-      }
-      .sidebar3 h2 {
-        margin-top: 1em;
-        color: #fff;
-      }
-      .lesson-item {
-        padding: 0.5em;
-        cursor: pointer;
-        border-radius: 4px;
-      }
-      .lesson-item:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-      .lesson-item.selected {
-        background: #cceeff;
-        color: #000;
-      }
-      .lesson-item.locked {
-        opacity: 0.5;
-        cursor: default;
-      }
+    /* Main content */
+    main.main-right {
+      margin-left: 270px;
+      padding: 2em;
+    }
+    #lessonArea h2 {
+      margin-top: 1.5em;
+    }
+    .section {
+      margin-bottom: 1.5em;
+    }
+    .section h3 {
+      margin-bottom: 0.5em;
+    }
 
-      /* Main content */
-      main.main-right {
-        margin-left: 270px;
-        padding: 2em;
-      }
-      #lessonArea h2 {
-        margin-top: 1.5em;
-      }
-      .section {
-        margin-bottom: 1.5em;
-      }
-      .section h3 {
-        margin-bottom: 0.5em;
-      }
+    /* Editor override */
+    #lessonArea .ace_editor {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
 
-      /* CodeMirror overrides */
-      .cm-editor {
-        border-radius: 4px;
-      }
+    /* Output pane */
+    .code-output {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      padding: 1em;
+      white-space: pre-wrap;
+      margin-top: 1em;
+    }
 
-      /* Output pane */
-      .code-output {
-        background: #f4f4f4;
-        border: 1px solid #ccc;
-        padding: 1em;
-        white-space: pre-wrap;
-        margin-top: 1em;
-      }
+    /* Chatbot */
+    .course-chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 300px;
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .chat-popup.flex {
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-header {
+      background: #007bff;
+      color: #fff;
+      padding: 0.5em;
+      display: flex;
+      justify-content: space-between;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 0.5em;
+      overflow-y: auto;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 0.5em;
+      border: none;
+    }
+    .chat-input button {
+      padding: 0.5em 1em;
+      border: none;
+      background: #007bff;
+      color: #fff;
+    }
+    .message {
+      margin-bottom: 0.5em;
+    }
+    .bot-message {
+      background: #e9e9e9;
+      padding: 0.5em;
+      border-radius: 4px;
+    }
+    .user-message {
+      background: #007bff;
+      color: #fff;
+      padding: 0.5em;
+      border-radius: 4px;
+      align-self: flex-end;
+    }
+  </style>
 
-      /* Chatbot (if you need it) */
-      .course-chatbot {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-      }
-      .chat-popup {
-        display: none;
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 300px;
-        background: #fff;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      }
-      .chat-popup.flex {
-        display: flex;
-        flex-direction: column;
-      }
-      .chat-header {
-        background: #007bff;
-        color: #fff;
-        padding: 0.5em;
-        display: flex;
-        justify-content: space-between;
-      }
-      .chat-messages {
-        flex: 1;
-        padding: 0.5em;
-        overflow-y: auto;
-      }
-      .chat-input {
-        display: flex;
-        border-top: 1px solid #ccc;
-      }
-      .chat-input input {
-        flex: 1;
-        padding: 0.5em;
-        border: none;
-      }
-      .chat-input button {
-        padding: 0.5em 1em;
-        border: none;
-        background: #007bff;
-        color: #fff;
-      }
-      .message {
-        margin-bottom: 0.5em;
-      }
-      .bot-message {
-        background: #e9e9e9;
-        padding: 0.5em;
-        border-radius: 4px;
-      }
-      .user-message {
-        background: #007bff;
-        color: #fff;
-        padding: 0.5em;
-        border-radius: 4px;
-        align-self: flex-end;
-      }
-    </style>
+  <script defer src="course_detail.js"></script>
+</head>
 
-    <script defer src="course_detail.js"></script>
-  </head>
-  <body>
-    <!-- Sidebar: lessons -->
-    <div class="sidebar3" id="sidebarLessons"></div>
+<body>
+  <!-- Sidebar lessons -->
+  <div class="sidebar3" id="sidebarLessons"></div>
 
-    <!-- Main content -->
-    <main class="main-right">
-      <div id="courseHeader">
-        <h1 id="courseTitle"></h1>
-        <p id="courseDescription"></p>
+  <!-- Main content -->
+  <main class="main-right">
+    <div id="courseHeader">
+      <h1 id="courseTitle"></h1>
+      <p id="courseDescription"></p>
+    </div>
+    <div id="lessonArea"></div>
+  </main>
+
+  <!-- Chatbot -->
+  <div class="course-chatbot" id="courseChatbot">
+    <button title="Chatbot" class="chat-button" id="chatButton">💬</button>
+    <div class="chat-popup" id="chatPopup">
+      <div class="chat-header">
+        <span>Chat with our AI assistant</span>
+        <button class="close-btn" id="closeChat">×</button>
       </div>
-      <div id="lessonArea"></div>
-    </main>
-
-    <!-- Chatbot -->
-    <div class="course-chatbot" id="courseChatbot">
-      <button class="chat-button" id="chatButton">💬</button>
-      <div class="chat-popup" id="chatPopup">
-        <div class="chat-header">
-          <span>Chat with our AI assistant</span>
-          <button class="close-btn" id="closeChat">×</button>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+          Hi! How can I help you with this course?
         </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="message bot-message">
-            Hi! How can I help you with this course?
-          </div>
-        </div>
-        <div class="chat-input">
-          <input
-            type="text"
-            id="message-input"
-            placeholder="Type your message..."
-          />
-          <button id="send-btn">Send</button>
-        </div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type your message..." />
+        <button id="send-btn">Send</button>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 </html>

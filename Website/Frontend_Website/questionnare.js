@@ -1,13 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementsByClassName('qsubmit-btn');
-    
-    if (button) {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('Button clicked - redirecting...'); // Debug check
-        window.location.href = "recommends.html";
-      });
-    } else {
-      console.error('Could not find element with id "qsubmit-btn"');
-    }
+const redirectButton = document.getElementsByClassName('qsubmit-btn')[0];
+
+redirectButton.addEventListener('click', () => {
+  const fields = ['puzzles','design','code','interactive','animations','structure'];
+  const answers = fields.map((name, idx) => {
+    const val = document.querySelector(`input[name="${name}"]:checked`);
+    return { question: idx + 1, answer: val ? val.value : 'no' };
   });
+
+  // 🧠 Save to localStorage
+  localStorage.setItem('student_answers', JSON.stringify(answers));
+
+  // 🚪 Redirect
+  window.location.href = 'recommends.html';
+});

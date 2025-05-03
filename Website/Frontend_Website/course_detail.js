@@ -1,22 +1,18 @@
 // course_detail.js
 document.addEventListener("DOMContentLoaded", async () => {
-  // 1) Auth guard
   const token = localStorage.getItem("jwt");
   if (!token) return window.location.href = "login.html";
 
-  // 2) Load course & enrollment
-  const course     = JSON.parse(localStorage.getItem("currentCourse"));
-  let enrollment   = JSON.parse(localStorage.getItem("currentEnrollment"));
+  const course = JSON.parse(localStorage.getItem("currentCourse"));
+  let enrollment = JSON.parse(localStorage.getItem("currentEnrollment"));
   if (!course || !enrollment) {
     alert("Missing course or enrollment data.");
     return window.location.href = "index.html";
   }
 
-  // 3) Fill header
-  document.getElementById("courseTitle").innerText       = course.title;
+  document.getElementById("courseTitle").innerText = course.title;
   document.getElementById("courseDescription").innerText = course.description || "";
 
-  // 4) Fetch course + lessons
   let courseData;
   try {
     const res = await fetch(`/api/courses/${course.course_id}`, {
@@ -29,15 +25,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // 5) Build lesson map
   const allLessons = [
-    ...(courseData.lessons?.Beginner     || []),
+    ...(courseData.lessons?.Beginner || []),
     ...(courseData.lessons?.Intermediate || []),
-    ...(courseData.lessons?.Advanced     || [])
+    ...(courseData.lessons?.Advanced || [])
   ];
   const lessonMap = new Map(allLessons.map(l => [l.lesson_id, l]));
 
-  // 6) Render sidebar
   const sidebar = document.getElementById("sidebarLessons");
   sidebar.innerHTML = "";
   for (const level of ["Beginner", "Intermediate", "Advanced"]) {
@@ -52,8 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           div.classList.add("locked");
         } else {
           div.addEventListener("click", () => {
-            sidebar.querySelectorAll(".lesson-item")
-                   .forEach(el => el.classList.remove("selected"));
+            sidebar.querySelectorAll(".lesson-item").forEach(el => el.classList.remove("selected"));
             div.classList.add("selected");
             renderLesson(lessonMap.get(meta.lesson_id));
             bumpProgress(meta);
@@ -63,22 +56,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
   }
 
-  // 7) Auto-click first unlocked
   const first = sidebar.querySelector(".lesson-item:not(.locked)");
   if (first) first.click();
 
-  // 8) renderLesson + CodeMirror integration
   function renderLesson(lesson) {
     const area = document.getElementById("lessonArea");
     area.innerHTML = `<h2>${lesson.title}</h2>`;
 
-    // parse content JSON
     let c = lesson.content;
     if (typeof c === "string") {
       try { c = JSON.parse(c); } catch {}
     }
 
-    // helper: extract code & description
     const temp = document.createElement("div");
     function extractCodeDesc(html) {
       temp.innerHTML = html;
@@ -90,17 +79,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         (pre || codeEl).remove();
       }
       return { codeText, descHTML: temp.innerHTML };
-     
     }
 
-    // loop blocks
     if (Array.isArray(c.contentBlocks)) {
       c.contentBlocks.forEach(block => {
         if (block.runnable) {
-          // extract
           const { codeText, descHTML } = extractCodeDesc(block.content);
 
-          // description
           area.insertAdjacentHTML("beforeend", `
             <section class="section">
               <h3>${block.title}</h3>
@@ -108,17 +93,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             </section>
           `);
 
-          // editor container
           const codeDiv = document.createElement("div");
           codeDiv.style.cssText = "height:200px;border:1px solid #ccc;";
           area.appendChild(codeDiv);
 
-          // init CodeMirror
           const mode = codeText.trim().startsWith("<") ? "html" : "js";
-          const cm   = window.createEditor(codeDiv, codeText, mode);
+          const cm = window.createEditor(codeDiv, codeText, mode);
 
-          // Run button + output pane
-          const btn       = document.createElement("button");
+          const btn = document.createElement("button");
           btn.textContent = "Run";
           area.appendChild(btn);
 
@@ -126,55 +108,76 @@ document.addEventListener("DOMContentLoaded", async () => {
           outputDiv.className = "code-output";
           area.appendChild(outputDiv);
 
-          // helpers to trap alerts & console.log
-          function withOverrides(fn) {
-            const oldA = window.alert, oldL = console.log;
-            window.alert = m => {
-              const p = document.createElement("p");
-              p.innerText = m;
-              outputDiv.appendChild(p);
-            };
-            console.log = (...args) => {
-              const p = document.createElement("p");
-              p.innerText = args.join(" ");
-              outputDiv.appendChild(p);
-            };
-            try { fn(); }
-            catch (e) {
-              const p = document.createElement("p");
-              p.innerText = "Error: " + e;
-              outputDiv.appendChild(p);
-            } finally {
-              window.alert = oldA;
-              console.log   = oldL;
-            }
-          }
-
-          // click handler
           btn.addEventListener("click", () => {
             outputDiv.innerHTML = "";
+            const userCode = cm.getValue();
+
             if (mode === "html") {
-              // parse HTML + scripts
-              const doc = new DOMParser()
-                            .parseFromString(cm.state.doc.toString(), "text/html");
-              let scripts = "";
-              doc.body.querySelectorAll("script")
-                 .forEach(s => { scripts += s.textContent + "\n"; s.remove(); });
-              outputDiv.appendChild(doc.body.cloneNode(true));
-              outputDiv.querySelectorAll("button").forEach(b => {
-                b.addEventListener("click", () => {
-                  withOverrides(() => {
-                    const onclick = doc.body.querySelector("button")
-                                       ?.getAttribute("onclick");
-                    onclick && eval(onclick);
-                    scripts && eval(scripts);
-                  });
-                });
-              });
+              const iframe = document.createElement("iframe");
+              const iframeId = "iframe_" + Math.random().toString(36).substring(2, 10);
+              iframe.id = iframeId;
+              iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-modals");
+              iframe.style.width = "100%";
+              iframe.style.height = "400px";
+              iframe.style.border = "1px solid #ccc";
+              outputDiv.appendChild(iframe);
+
+              const learningEffects = `
+                function showAnimatedMessage(message) {
+                  const msgDiv = document.createElement("div");
+                  msgDiv.innerText = message;
+                  msgDiv.style.position = "fixed";
+                  msgDiv.style.top = Math.random() * 80 + "%";
+                  msgDiv.style.left = Math.random() * 80 + "%";
+                  msgDiv.style.fontSize = "24px";
+                  msgDiv.style.fontWeight = "bold";
+                  msgDiv.style.color = randomColor();
+                  msgDiv.style.zIndex = 9999;
+                  msgDiv.style.transition = "all 1s ease";
+                  document.body.appendChild(msgDiv);
+                  setTimeout(() => {
+                    msgDiv.style.transform = "translateY(-100px)";
+                    msgDiv.style.opacity = "0";
+                  }, 100);
+                  setTimeout(() => {
+                    msgDiv.remove();
+                  }, 1500);
+                }
+                function randomColor() {
+                  const colors = ["#ff4b5c", "#3ac569", "#4d7cff", "#ffbb00", "#9b59b6"];
+                  return colors[Math.floor(Math.random() * colors.length)];
+                }
+              `;
+
+              const completeHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset="UTF-8">
+                  <script>
+                    ${learningEffects}
+                    const iframeId = "${iframeId}";
+                    window.alert = function(msg) {
+                      parent.postMessage({ type: "alert", message: msg, iframeId: iframeId }, "*");
+                    };
+                    console.log = function(...args) {
+                      parent.postMessage({ type: "log", message: args.join(" "), iframeId: iframeId }, "*");
+                    };
+                  <\/script>
+                </head>
+                <body>
+                  ${userCode}
+                </body>
+                </html>
+              `;
+
+              const blob = new Blob([completeHTML], { type: "text/html" });
+              const blobURL = URL.createObjectURL(blob);
+              iframe.src = blobURL;
+
             } else {
-              // pure JS
-              withOverrides(() => {
-                const result = eval(cm.state.doc.toString());
+              trapAndRun(() => {
+                const result = eval(userCode);
                 if (result !== undefined) {
                   const p = document.createElement("p");
                   p.innerText = result;
@@ -184,11 +187,34 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
           });
 
-          // auto-run Try This Example
+          function trapAndRun(fn) {
+            const oldAlert = window.alert;
+            const oldLog = console.log;
+            try {
+              window.alert = (msg) => {
+                const p = document.createElement("p");
+                p.innerText = "Alert: " + msg;
+                outputDiv.appendChild(p);
+              };
+              console.log = (...args) => {
+                const p = document.createElement("p");
+                p.innerText = args.join(" ");
+                outputDiv.appendChild(p);
+              };
+              fn();
+            } catch (error) {
+              const p = document.createElement("p");
+              p.innerText = "Error: " + error.message;
+              outputDiv.appendChild(p);
+            } finally {
+              window.alert = oldAlert;
+              console.log = oldLog;
+            }
+          }
+
           if (block.type === "section") btn.click();
-        }
-        else {
-          // non-runnable
+
+        } else {
           if (block.type === "section") {
             area.insertAdjacentHTML("beforeend", `
               <section class="section">
@@ -196,55 +222,52 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ${block.content}
               </section>
             `);
-          } else if (block.type === "exercise") {
-            area.insertAdjacentHTML("beforeend", `
-              <section class="section exercise">
-                <h4>${block.title}</h4>
-                <p>${block.description}</p>
-                <pre><code>${block.content}</code></pre>
-              </section>
-            `);
-          } else if (block.type === "quiz") {
-            area.insertAdjacentHTML("beforeend", `
-              <section class="section quiz">
-                <h3>${block.title}</h3>
-                ${Array.isArray(block.content)
-                  ? block.content.map((q,i)=>`
-                      <div>
-                        <h4>Q${i+1}: ${q.question}</h4>
-                        ${q.options?.map(o=>`<p>${o}</p>`).join("")||""}
-                      </div>
-                    `).join("")
-                  : block.content}
-              </section>
-            `);
           }
         }
       });
+
+      // right after renderLesson is called:
+localStorage.setItem("currentLesson", JSON.stringify(lesson));
+
+
+      // ─── START QUIZ BUTTON ────────────────────────────────────────────────
+      const quizBlock = c.contentBlocks.find(b => b.type === "quiz");
+      if (quizBlock) {
+        const quizBtn = document.createElement("button");
+        quizBtn.textContent = "Start Quiz";
+        quizBtn.style.marginTop = "1em";
+        area.appendChild(quizBtn);
+
+        quizBtn.addEventListener("click", () => {
+          localStorage.setItem("currentQuizContext", JSON.stringify({
+            lessonId: lesson.lesson_id,
+            enrollmentId: enrollment.enrollment_id,
+            quizTitle: quizBlock.title
+          }));
+          window.location.href = "quizes.html";
+        });
+      }
     }
   }
 
-  // 9) bumpProgress
   async function bumpProgress(meta) {
     if (meta.order_number <= enrollment.current_lesson) return;
     const payload = {
-      current_level:  meta.level,
+      current_level: meta.level,
       current_lesson: meta.order_number,
-      quiz_marks:     enrollment.quiz_marks   || null,
-      quiz_answers:   enrollment.quiz_answers || null,
-      ai_feedback:    enrollment.ai_feedback  || null
+      quiz_marks: enrollment.quiz_marks || null,
+      quiz_answers: enrollment.quiz_answers || null,
+      ai_feedback: enrollment.ai_feedback || null
     };
     try {
-      const res = await fetch(
-        `/api/enrollments/${enrollment.enrollment_id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type":  "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(payload)
-        }
-      );
+      const res = await fetch(`/api/enrollments/${enrollment.enrollment_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
       if (res.ok) {
         enrollment = await res.json();
         localStorage.setItem("currentEnrollment", JSON.stringify(enrollment));
@@ -254,12 +277,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 10) Chatbot wiring
-  const chatButton   = document.getElementById("chatButton"),
-        chatPopup    = document.getElementById("chatPopup"),
-        closeChat    = document.getElementById("closeChat"),
-        msgInput     = document.getElementById("message-input"),
-        sendBtn      = document.getElementById("send-btn"),
+  const chatButton = document.getElementById("chatButton"),
+        chatPopup = document.getElementById("chatPopup"),
+        closeChat = document.getElementById("closeChat"),
+        msgInput = document.getElementById("message-input"),
+        sendBtn = document.getElementById("send-btn"),
         chatMessages = document.getElementById("chatMessages");
 
   chatButton.addEventListener("click", () => {
@@ -294,4 +316,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Chatbot error:", err);
     }
   });
+});
+
+// Trap iframe messages
+window.addEventListener("message", (event) => {
+  if (!event.data) return;
+  if (event.data.type === "alert" || event.data.type === "log") {
+    const iframeId = event.data.iframeId;
+    const iframe = document.getElementById(iframeId);
+    if (iframe) {
+      const outputDiv = iframe.parentElement.querySelector(".code-output");
+      if (outputDiv) {
+        const p = document.createElement("p");
+        p.innerText = (event.data.type === "alert" ? "Alert: " : "") + event.data.message;
+        outputDiv.appendChild(p);
+      }
+    }
+  }
 });

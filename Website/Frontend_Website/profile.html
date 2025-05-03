@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <img src="icons/image.png" alt="Profile Picture" class="profile-pic" id="profilePic">
+            <div class="profile-info">
+                <h1 id="userName">John Doe</h1>
+                <p id="userTitle">Software Developer</p>
+                <p id="userBio">Passionate about coding and building amazing user experiences.</p>
+                <button class="edit-toggle" id="editToggle">Edit Profile</button>
+            </div>
+        </div>
+        
+        <div class="badge-section">
+            <h2>Your Badges</h2>
+            <div class="badges-container">
+                <div class="badge">
+                    <div class="badge-icon gold">G</div>
+                    <div class="badge-count" id="goldCount">5</div>
+                    <div>Gold</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon silver">S</div>
+                    <div class="badge-count" id="silverCount">12</div>
+                    <div>Silver</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon bronze">B</div>
+                    <div class="badge-count" id="bronzeCount">24</div>
+                    <div>Bronze</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="edit-form hidden" id="editForm">
+            <h2>Edit Profile</h2>
+            <div class="form-group">
+                <label for="editName">Name:</label>
+                <input type="text" id="editName" value="John Doe">
+            </div>
+            <div class="form-group">
+                <label for="editTitle">Title:</label>
+                <input type="text" id="editTitle" value="Software Developer">
+            </div>
+            <div class="form-group">
+                <label for="editBio">Bio:</label>
+                <textarea id="editBio" rows="3">Passionate about coding and building amazing user experiences.</textarea>
+            </div>
+            <div class="form-group">
+                <label>Profile Picture:</label>
+                <div class="file-input-container">
+                    <label for="fileInput" class="file-input-label">Choose File</label>
+                    <span class="file-input-name" id="fileName">No file chosen</span>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+                <img id="imagePreview" class="preview-image" alt="Image Preview">
+                <p>Or enter URL:</p>
+                <input type="text" id="editPic" value="https://via.placeholder.com/100" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="button-group">
+                <button id="saveBtn">Save Changes</button>
+                <button class="edit-toggle" id="cancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
