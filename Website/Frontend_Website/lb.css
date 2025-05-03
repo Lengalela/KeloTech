@@ -206,3 +206,45 @@ h1 {
 .logout-button:hover {
     background: #c53030;
 }
+/* Container & loading */
+#leaderboard-entries .loading,
+#leaderboard-entries .error {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+/* Each row */
+.leaderboard-entry {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+.leaderboard-entry .rank  { width: 50px; font-weight: bold; }
+.leaderboard-entry .user  { flex: 1; display: flex; align-items: center; }
+.leaderboard-entry .score { width: 100px; text-align: right; }
+.leaderboard-entry .badges{ width: 150px; text-align: center; }
+
+/* Avatar bubble */
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Badge spans inside .badges */
+.badge {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+/* Highlight top 3 */
+.leaderboard-entry.first  { background: #fff7e6; }
+.leaderboard-entry.second { background: #f0f0f0; }
+.leaderboard-entry.third  { background: #fff0f0; }
