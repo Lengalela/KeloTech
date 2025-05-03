@@ -36,22 +36,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   sidebar.innerHTML = "";
   for (const level of ["Beginner", "Intermediate", "Advanced"]) {
     sidebar.insertAdjacentHTML("beforeend", `<h2>${level} Lessons</h2>`);
-    (courseData.lessons[level] || []).sort((a, b) => a.order_number - b.order_number).forEach(meta => {
-      const div = document.createElement("div");
-      div.className = "lesson-item";
-      div.innerText = meta.title;
-      if (meta.order_number > enrollment.current_lesson + 1) {
-        div.classList.add("locked");
-      } else {
-        div.addEventListener("click", () => {
-          sidebar.querySelectorAll(".lesson-item").forEach(el => el.classList.remove("selected"));
-          div.classList.add("selected");
-          renderLesson(lessonMap.get(meta.lesson_id));
-          bumpProgress(meta);
-        });
-      }
-      sidebar.appendChild(div);
-    });
+    (courseData.lessons[level] || [])
+      .sort((a, b) => a.order_number - b.order_number)
+      .forEach(meta => {
+        const div = document.createElement("div");
+        div.className = "lesson-item";
+        div.innerText = meta.title;
+        if (meta.order_number > enrollment.current_lesson + 1) {
+          div.classList.add("locked");
+        } else {
+          div.addEventListener("click", () => {
+            sidebar.querySelectorAll(".lesson-item").forEach(el => el.classList.remove("selected"));
+            div.classList.add("selected");
+            renderLesson(lessonMap.get(meta.lesson_id));
+            bumpProgress(meta);
+          });
+        }
+        sidebar.appendChild(div);
+      });
   }
 
   const first = sidebar.querySelector(".lesson-item:not(.locked)");
@@ -84,7 +86,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (block.runnable) {
           const { codeText, descHTML } = extractCodeDesc(block.content);
 
-          area.insertAdjacentHTML("beforeend", `<section class="section"><h3>${block.title}</h3>${descHTML}</section>`);
+          area.insertAdjacentHTML("beforeend", `
+            <section class="section">
+              <h3>${block.title}</h3>
+              ${descHTML}
+            </section>
+          `);
 
           const codeDiv = document.createElement("div");
           codeDiv.style.cssText = "height:200px;border:1px solid #ccc;";
@@ -166,7 +173,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
               const blob = new Blob([completeHTML], { type: "text/html" });
               const blobURL = URL.createObjectURL(blob);
-
               iframe.src = blobURL;
 
             } else {
@@ -207,12 +213,40 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
 
           if (block.type === "section") btn.click();
+
         } else {
           if (block.type === "section") {
-            area.insertAdjacentHTML("beforeend", `<section class="section"><h3>${block.title}</h3>${block.content}</section>`);
+            area.insertAdjacentHTML("beforeend", `
+              <section class="section">
+                <h3>${block.title}</h3>
+                ${block.content}
+              </section>
+            `);
           }
         }
       });
+
+      // right after renderLesson is called:
+localStorage.setItem("currentLesson", JSON.stringify(lesson));
+
+
+      // ─── START QUIZ BUTTON ────────────────────────────────────────────────
+      const quizBlock = c.contentBlocks.find(b => b.type === "quiz");
+      if (quizBlock) {
+        const quizBtn = document.createElement("button");
+        quizBtn.textContent = "Start Quiz";
+        quizBtn.style.marginTop = "1em";
+        area.appendChild(quizBtn);
+
+        quizBtn.addEventListener("click", () => {
+          localStorage.setItem("currentQuizContext", JSON.stringify({
+            lessonId: lesson.lesson_id,
+            enrollmentId: enrollment.enrollment_id,
+            quizTitle: quizBlock.title
+          }));
+          window.location.href = "quizes.html";
+        });
+      }
     }
   }
 
@@ -300,5 +334,3 @@ window.addEventListener("message", (event) => {
     }
   }
 });
-
-
