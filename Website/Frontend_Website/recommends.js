@@ -3,7 +3,7 @@ const suggestedLanguages = [
     { code: 'Js', name: 'JavaScript'},
     { code: 'Ja', name: 'Java'},
     { code: 'CSS', name: 'CSS'},
-    { code: 'ar', name: 'Arabic'}
+    { code: 'html', name: 'HTML'}
 ];
 
 // Track subscribed languages
@@ -21,6 +21,40 @@ suggestedLanguages.forEach(lang => {
     `;
     container.appendChild(card);
 });
+
+// Function to get recommendation from backend (Flask)
+async function fetchRecommendation() {
+    const data = {
+        answers: [
+            { question: 1, answer: "yes" },
+            { question: 2, answer: "no" },
+            { question: 3, answer: "yes" },
+            { question: 4, answer: "yes" },
+            { question: 5, answer: "no" },
+            { question: 6, answer: "yes" }
+        ]
+    };
+
+    try {
+        const response = await fetch('http://localhost:5000/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        const recommendationText = result.response || 'We recommend exploring some courses based on your interests!';
+        
+        // Display recommendation text
+        document.getElementById('recommendationText').innerText = '🎓 ' + recommendationText;
+    } catch (error) {
+        console.error('Error fetching recommendation:', error);
+        document.getElementById('recommendationText').innerText = 'Sorry, something went wrong!';
+    }
+}
+
+// Fetch recommendation when page loads
+fetchRecommendation();
 
 // Handle subscribe button clicks
 document.addEventListener('click', function(e) {
