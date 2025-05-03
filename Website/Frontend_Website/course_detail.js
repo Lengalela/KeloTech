@@ -116,7 +116,8 @@ document.addEventListener("DOMContentLoaded", async () => {
               const iframe = document.createElement("iframe");
               const iframeId = "iframe_" + Math.random().toString(36).substring(2, 10);
               iframe.id = iframeId;
-              iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-modals");
+              // before
+             iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-modals allow-forms");
               iframe.style.width = "100%";
               iframe.style.height = "400px";
               iframe.style.border = "1px solid #ccc";

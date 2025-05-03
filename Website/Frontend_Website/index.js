@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "login.html";
       return;
     }
+    document.getElementById("viewLeaderboard").addEventListener("click", () => {
+      window.location.href = "leaderboard.html";
+    });
+
     const profileData = await profileResponse.json();
     document.getElementById("usernameDisplay").innerText = profileData.learner.username;
 

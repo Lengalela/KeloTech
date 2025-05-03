@@ -43,6 +43,10 @@ app.use("/api", lessonRoutes);
 const enrollmentRoutes = require("./Routes/EnrollmentRoutes");
 app.use("/api/enrollments", enrollmentRoutes);
 
+const leaderboardRouter = require('./Routes/LeaderBoardRoutes');
+app.use('/api/leaderboard', leaderboardRouter);
+
+
 // WebSocket connection
 io.on("connection", (socket) => {
   console.log("🟢 Learner connected:", socket.id);
