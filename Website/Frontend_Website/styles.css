@@ -1,5 +1,6 @@
 :root {
     --primary-green: #20531a;
+    --secondary-green: #0c6c01;
     --primary-orange: #c83e0f;
     --secondary-orange: #a5340c;
     --dark-orange: #9c2b03;
@@ -36,7 +37,7 @@ body::before {
 
 #forms {
     font-family: 'Open Sans', sans-serif;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -61,7 +62,7 @@ body::before {
 .sidebar3 {
     width: 250px;
     height: 100vh;
-    background-color: #333;
+    background-color: var(--secondary-orange);
     padding-top: 20px;
     position: fixed;
     left: 0;
@@ -72,12 +73,11 @@ body::before {
 }
 
 /* Image for pfp*/
-img > :not(.logoC){
+.profile img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 1.5rem;
     border: 3px solid var(--primary-green);
 }
 
@@ -109,6 +109,7 @@ img > :not(.logoC){
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
+    margin: 0 auto; /* Ensures horizontal centering */
 }
   
 .login-wrapper {
@@ -116,11 +117,11 @@ img > :not(.logoC){
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: auto;
+    height: 100vh;
     width: 100%;
 }
 
-.logoC {
+.logoC img {
     max-width: 150px;
     height: auto;
     margin-bottom: 5px; /* Adds space between logo and login container */
@@ -298,7 +299,7 @@ button:hover {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #4CAF50;
+    background-color: var(--primary-green);
     color: white;
     border: none;
     border-radius: 50%;
@@ -328,7 +329,7 @@ button:hover {
 
 /* Chat header */
 .chat-header {
-    background-color: #4CAF50;
+    background-color: var(--primary-green);
     color: white;
     padding: 10px;
     border-top-left-radius: 10px;
@@ -385,7 +386,7 @@ button:hover {
 }
 
 #send-btn:hover {
-    background: darkblue;
+    background: var(--secondary-green);
 }
 
 /* Message styling */
