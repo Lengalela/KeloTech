@@ -2,25 +2,47 @@
     --gold: #ffd700;
     --silver: #c0c0c0;
     --bronze: #cd7f32;
-    --primary: #4a6fa5;
+    --primary: #20531a;
+    --secondaryG: #0c6c01;
+    --secondary: #a5340c;
     --light: #f8f9fa;
     --dark: #343a40;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
     color: #333;
+    position: relative; /* Needed for absolute positioning */
+    min-height: 100vh; /* Ensures full coverage */
+    overflow-x: hidden; /* Prevents unwanted scrolling */
+}
+
+/* Blurred background (does not affect layout) */
+body::before {
+    content: "";
+    position: fixed; /* Covers entire viewport without moving */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('icons/bg.jpg');
+    background-size: cover; /* Prevents repeating */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1; /* Keeps it behind content */
+    transform: scale(1.1); /* Expands the image to hide blurred edges */
+    filter: blur(5px); /* Adjust blur strength */
 }
 
 .container {
     max-width: 800px;
     margin: 2rem auto;
     padding: 1rem;
-    background: white;
+    background: #fee7bdc6;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -54,12 +76,16 @@ body {
 
 .badge-section {
     margin: 2rem 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .badge-section h2 {
     color: var(--primary);
     border-bottom: 2px solid var(--primary);
     padding-bottom: 0.5rem;
+    text-align: center;
 }
 
 .badges-container {
@@ -67,11 +93,13 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
     margin-top: 1rem;
+    gap: 30px;
 }
 
 .badge {
     text-align: center;
-    margin: 1rem;
+    position: relative;
+    width: 120px;
 }
 
 .badge-icon {
@@ -81,30 +109,59 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 0.5rem;
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
+    margin: 0 auto 10px;
+    position: relative;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.badge-icon:hover {
+    transform: scale(1.05);
 }
 
 .gold {
-    background-color: var(--gold);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
 
 .silver {
-    background-color: var(--silver);
-    box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.4);
 }
 
 .bronze {
-    background-color: var(--bronze);
-    box-shadow: 0 0 10px rgba(205, 127, 50, 0.5);
+    background: linear-gradient(135deg, #CD7F32 0%, #A97142 100%);
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.4);
 }
 
 .badge-count {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
     font-weight: bold;
-    font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: 2px solid #eee;
+}
+
+.badge-icon i {
+    font-size: 36px;
+    color: rgba(255,255,255,0.9);
+}
+
+.badge div:last-child {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: #333;
 }
 
 .edit-form {
@@ -172,10 +229,10 @@ button {
 }
 
 button:hover {
-    background-color: #3a5a8f;
+    background-color: var(--secondaryG);
 }
 
-.edit-toggle {
+.edit-toggle, .previous-page {
     background-color: transparent;
     color: var(--primary);
     border: 1px solid var(--primary);
