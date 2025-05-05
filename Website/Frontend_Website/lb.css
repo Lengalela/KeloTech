@@ -10,10 +10,29 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
-    margin-right: 250px;
+    margin-right: 250px; /* Your sidebar width */
     padding: 20px;
     flex-grow: 1;
+    position: relative; /* Needed for absolute positioning */
+    min-height: 100vh; /* Ensures full coverage */
+    overflow-x: hidden; /* Prevents unwanted scrolling */
+}
+
+/* Blurred background (does not affect layout) */
+body::before {
+    content: "";
+    position: fixed; /* Covers entire viewport without moving */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('icons/bg.jpg');
+    background-size: cover; /* Prevents repeating */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1; /* Keeps it behind content */
+    transform: scale(1.1); /* Expands the image to hide blurred edges */
+    filter: blur(5px); /* Adjust blur strength */
 }
 
 /* Sidebar 2 is in index.html */
