@@ -46,6 +46,35 @@
             <p class="tech-description">Dive into programming fundamentals with one of the world's most versatile languages.</p>
         </div>
     </div>
+
+    <!-- Voice Guide Button and Popup -->
+    <div class="voice-guide-container">
+        <button class="voice-guide-btn" id="voiceGuideBtn">
+        <i class="fas fa-assistive-listening-systems"></i> Voice Guide
+        </button>
+        
+        <div class="voice-guide-popup" id="voiceGuidePopup">
+        <div class="voice-guide-header">
+            <h3>Voice Guided Options</h3>
+            <button class="close-btn" id="closeVoiceGuide">&times;</button>
+        </div>
+        <div class="voice-guide-options">
+            <button class="voice-option" data-command="welcome">
+            <i class="fas fa-play"></i> Play Welcome
+            </button>
+            <button class="voice-option" data-command="courses">
+            <i class="fas fa-play"></i> Explain Courses
+            </button>
+            <button class="voice-option" data-command="navigation">
+            <i class="fas fa-play"></i> Navigation Help
+            </button>
+            <button class="voice-option" data-command="stop">
+            <i class="fas fa-stop"></i> Stop Audio
+            </button>
+        </div>
+        </div>
+    </div>
+
     <script src="home.js"></script>
 </body>
 </html>

@@ -292,7 +292,54 @@ button:hover {
     background: darkblue;
 }
 
+/* Language Dropdown Styles */
+.language-dropdown {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
 
+.language-btn {
+  background-color: var(--primary-green);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.language-btn:hover {
+  background-color: var(--secondary-green);
+}
+
+.language-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.language-content a {
+  color: black;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.language-content a:hover {
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.language-dropdown:hover .language-content {
+  display: block;
+}
 
 /* Chat button style */
 .chat-button {
