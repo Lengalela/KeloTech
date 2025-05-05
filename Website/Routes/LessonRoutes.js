@@ -41,4 +41,5 @@ router.post("/courses/:courseId/lessons", async (req, res) => {
 
 // Additional endpoints (update, delete) may be added here as needed
 
+
 module.exports = router;
