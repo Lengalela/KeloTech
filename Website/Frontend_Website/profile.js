@@ -8,6 +8,9 @@ const cancelBtn = document.getElementById('cancelBtn');
 const userName = document.getElementById('userName');
 const userTitle = document.getElementById('userTitle');
 const userBio = document.getElementById('userBio');
+const userEmail = document.getElementById('userEmail');
+const userSchool = document.getElementById('userSchool');
+const userSince = document.getElementById('userSince');
 const profilePic = document.getElementById('profilePic');
 
 // Badge counters
@@ -27,93 +30,148 @@ const imagePreview = document.getElementById('imagePreview');
 // Track if a file was selected
 let selectedFile = null;
 
-// Toggle edit form
+// Load learner data from new simple profile endpoint
+window.addEventListener('DOMContentLoaded', async () => {
+    console.log("📦 DOM loaded, starting profile fetch...");
+
+    try {
+    const res = await fetch(`${window.location.origin}/api/learners/profile-simple`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+      },
+    });
+    console.log("📡 Fetch response status:", res.status);
+const text = await res.text();
+
+console.log("🧾 Raw response text:", text);
+
+let data;
+try {
+  data = JSON.parse(text);
+} catch (e) {
+  console.error("❌ Failed to parse JSON:", e.message);
+  return;
+}
+
+if (!res.ok) {
+  console.error("🚫 Server responded with error:", data.error || text);
+  return;
+}
+
+console.log("✅ Parsed profile data:", data);
+
+
+    userName.textContent = data.first_name + ' ' + data.last_name;
+    userTitle.textContent = 'Learner';
+    userBio.textContent = 'No bio yet';
+    userEmail.textContent = data.email;
+    userSchool.textContent = data.school;
+    userSince.textContent = new Date(data.created_at).toLocaleDateString();
+
+    profilePic.src = 'icons/image.png';
+
+    // Form values
+    editName.value = userName.textContent;
+    editTitle.value = '';
+    editBio.value = '';
+    editPic.value = '';
+
+    // No marks in simple profile — skip badges or simulate
+    calculateBadges({ lesson1: 95, lesson2: 86, lesson3: 72 }); // mock marks for now
+  } catch (err) {
+    console.error('Failed to load profile:', err);
+  }
+});
+
+// Badge calculator
+function calculateBadges(marks) {
+  let gold = 0, silver = 0, bronze = 0;
+  const scores = Object.values(marks);
+  scores.forEach(score => {
+    if (score >= 90) gold++;
+    else if (score >= 80) silver++;
+    else if (score >= 70) bronze++;
+  });
+
+  goldCount.textContent = gold;
+  silverCount.textContent = silver;
+  bronzeCount.textContent = bronze;
+}
+
+// UI handlers
 editToggle.addEventListener('click', () => {
-    editForm.classList.toggle('hidden');
+  editForm.classList.toggle('hidden');
 });
 
 cancelBtn.addEventListener('click', () => {
-    editForm.classList.add('hidden');
-    // Reset file selection
-    fileInput.value = '';
-    fileName.textContent = 'No file chosen';
-    imagePreview.style.display = 'none';
-    selectedFile = null;
+  editForm.classList.add('hidden');
+  fileInput.value = '';
+  fileName.textContent = 'No file chosen';
+  imagePreview.style.display = 'none';
+  selectedFile = null;
 });
 
-// Handle file selection
 fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) {
-        selectedFile = e.target.files[0];
-        fileName.textContent = selectedFile.name;
-        
-        // Clear URL input when file is selected
-        editPic.value = '';
-        
-        // Show preview
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            imagePreview.src = event.target.result;
-            imagePreview.style.display = 'block';
-        };
-        reader.readAsDataURL(selectedFile);
-    } else {
-        fileName.textContent = 'No file chosen';
-        imagePreview.style.display = 'none';
-        selectedFile = null;
-    }
-});
+  if (e.target.files.length > 0) {
+    selectedFile = e.target.files[0];
+    fileName.textContent = selectedFile.name;
+    editPic.value = '';
 
-// Handle URL input change
-editPic.addEventListener('input', () => {
-    if (editPic.value) {
-        // Clear file selection when URL is entered
-        fileInput.value = '';
-        fileName.textContent = 'No file chosen';
-        selectedFile = null;
-        imagePreview.style.display = 'none';
-    }
-});
-
-// Save profile changes
-saveBtn.addEventListener('click', () => {
-    userName.textContent = editName.value;
-    userTitle.textContent = editTitle.value;
-    userBio.textContent = editBio.value;
-    
-    // Handle profile picture update
-    if (selectedFile) {
-        // In a real app, you would upload the file to a server
-        // For this demo, we'll use the local file URL
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            profilePic.src = event.target.result;
-        };
-        reader.readAsDataURL(selectedFile);
-    } else if (editPic.value) {
-        profilePic.src = editPic.value;
-    }
-    
-    editForm.classList.add('hidden');
-    
-    // Reset file selection
-    fileInput.value = '';
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      imagePreview.src = event.target.result;
+      imagePreview.style.display = 'block';
+    };
+    reader.readAsDataURL(selectedFile);
+  } else {
     fileName.textContent = 'No file chosen';
     imagePreview.style.display = 'none';
     selectedFile = null;
-    
-    // In a real app, you would save to a server here
-    // For demo, we'll just update the badge counts randomly
-    updateBadges();
+  }
 });
 
-// Function to update badge counts (simulating progress)
-function updateBadges() {
-    // In a real app, these would come from a server/database
-    goldCount.textContent = Math.floor(Math.random() * 10) + 1;
-    silverCount.textContent = Math.floor(Math.random() * 20) + 5;
-    bronzeCount.textContent = Math.floor(Math.random() * 30) + 10;
-}
+editPic.addEventListener('input', () => {
+  if (editPic.value) {
+    fileInput.value = '';
+    fileName.textContent = 'No file chosen';
+    selectedFile = null;
+    imagePreview.style.display = 'none';
+  }
+});
 
-// Initialize with some random badge counts
-updateBadges();
+saveBtn.addEventListener('click', async () => {
+  const updated = {
+    title: editTitle.value,
+    bio: editBio.value,
+    profile_pic: selectedFile ? null : editPic.value,
+  };
+
+  if (selectedFile) {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      updated.profile_pic = e.target.result;
+      await updateProfile(updated);
+    };
+    reader.readAsDataURL(selectedFile);
+  } else {
+    await updateProfile(updated);
+  }
+});
+
+async function updateProfile(data) {
+  try {
+    const res = await fetch('/api/learners/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) throw await res.text();
+    window.location.reload();
+  } catch (err) {
+    console.error('Failed to update profile:', err);
+  }
+}
