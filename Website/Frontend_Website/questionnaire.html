@@ -4,11 +4,37 @@
   <meta charset="UTF-8">
   <title>Tech Interest Questionnaire</title>
   <style>
+    :root {
+      --primary-green: #20531a;
+      --secondary-green: #1a4415;
+      --bg: #fee7bdc6;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      font-family: 'Open Sans', sans-serif;
       margin: 0;
       padding: 20px;
+      flex-grow: 1;
+      position: relative; /* Needed for absolute positioning */
+      min-height: 100vh; /* Ensures full coverage */
+      overflow-x: hidden; /* Prevents unwanted scrolling */
+    }
+
+    /* Blurred background (does not affect layout) */
+    body::before {
+      content: "";
+      position: fixed; /* Covers entire viewport without moving */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('icons/bg.jpg');
+      background-size: cover; /* Prevents repeating */
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1; /* Keeps it behind content */
+      transform: scale(1.1); /* Expands the image to hide blurred edges */
+      filter: blur(5px); /* Adjust blur strength */
     }
     h2 {
       text-align: center;
@@ -16,7 +42,7 @@
     .container {
       max-width: 600px;
       margin: 20px auto;
-      background: #fff;
+      background: var(--bg);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -39,7 +65,7 @@
       display: block;
       width: 100%;
       padding: 10px;
-      background: #4CAF50;
+      background: var(--primary-green);
       color: #fff;
       border: none;
       border-radius: 4px;
@@ -48,7 +74,7 @@
       margin-top: 10px;
     }
     button:hover {
-      background: #45a049;
+      background: var(--secondary-green);
     }
     .result {
       display: none;
