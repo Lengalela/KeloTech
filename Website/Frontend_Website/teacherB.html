@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="teacherB.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="profile-section">
+                <img src="icons/image.png" alt="Profile Picture" class="profile-pic" id="profilePic">
+                <div class="profile-info">
+                    <h1 id="teacherName">Ms. Johnson</h1>
+                    <p id="teacherSubject">Mathematics Teacher</p>
+                </div>
+            </div>
+            <div class="classroom-controls">
+                <select id="classroomSelect">
+                    <option value="">Select a classroom</option>
+                    <option value="math101">Math 1a</option>
+                    <option value="math201">Math 2a</option>
+                    <option value="advmath">Applied Statistics</option>
+                </select>
+                <button id="editProfileBtn" class="edit-toggle">Edit Profile</button>
+                <button onclick="window.location.href='class.html'" class="edit-toggle">View Classes</button>
+                <button onclick="window.history.back()" class="edit-toggle">Previous Page</button>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="class-info">
+                <h2>Class Information</h2>
+                <div id="classDetails">
+                    <p>Please select a classroom from the dropdown</p>
+                </div>
+                <h3>Students</h3>
+                <ul class="student-list" id="studentList">
+                    <li>No classroom selected</li>
+                </ul>
+            </div>
+            
+            <div class="progress-section">
+                <h2>Progress Report</h2>
+                <div id="progressReport">
+                    <p>Select a classroom to view progress data</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="editName">Name:</label>
+                <input type="text" id="editName" value="Ms. Johnson" class="modal-input">
+            </div>
+            <div class="form-group">
+                <label for="editSubject">Subject:</label>
+                <input type="text" id="editSubject" value="Mathematics Teacher" class="modal-input">
+            </div>
+            <div class="form-group">
+                <label for="editPic">Profile Picture URL:</label>
+                <input type="text" id="editPic" value="https://via.placeholder.com/80" class="modal-input">
+            </div>
+            <button id="saveProfileBtn">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for classrooms and students
+        const classroomData = {
+            math101: {
+                name: "Math 1a",
+                subject: "Algebra Fundamentals",
+                students: [
+                    { id: 1, name: "Alex Johnson", progress: 75 },
+                    { id: 2, name: "Jamie Smith", progress: 88 },
+                    { id: 3, name: "Taylor Williams", progress: 62 },
+                    { id: 4, name: "Morgan Brown", progress: 91 },
+                    { id: 5, name: "Casey Davis", progress: 53 }
+                ]
+            },
+            math201: {
+                name: "Math 2a",
+                subject: "Geometry",
+                students: [
+                    { id: 6, name: "Riley Miller", progress: 82 },
+                    { id: 7, name: "Jordan Wilson", progress: 77 },
+                    { id: 8, name: "Skyler Moore", progress: 95 },
+                    { id: 9, name: "Drew Taylor", progress: 68 }
+                ]
+            },
+            advmath: {
+                name: "Applied Statistics",
+                subject: "Calculus",
+                students: [
+                    { id: 10, name: "Peyton Anderson", progress: 89 },
+                    { id: 11, name: "Quinn Thomas", progress: 94 },
+                    { id: 12, name: "Blake Jackson", progress: 78 },
+                    { id: 13, name: "Avery White", progress: 85 },
+                    { id: 14, name: "Cameron Harris", progress: 91 },
+                    { id: 15, name: "Hayden Martin", progress: 82 }
+                ]
+            }
+        };
+
+        // DOM Elements
+        const classroomSelect = document.getElementById('classroomSelect');
+        const classDetails = document.getElementById('classDetails');
+        const studentList = document.getElementById('studentList');
+        const progressReport = document.getElementById('progressReport');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const editProfileModal = document.getElementById('editProfileModal');
+        const closeModal = document.getElementById('closeModal');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const teacherName = document.getElementById('teacherName');
+        const teacherSubject = document.getElementById('teacherSubject');
+        const profilePic = document.getElementById('profilePic');
+        const editName = document.getElementById('editName');
+        const editSubject = document.getElementById('editSubject');
+        const editPic = document.getElementById('editPic');
+
+        // Event Listeners
+        classroomSelect.addEventListener('change', updateClassroomView);
+        editProfileBtn.addEventListener('click', () => {
+            editProfileModal.style.display = 'flex';
+        });
+        closeModal.addEventListener('click', () => {
+            editProfileModal.style.display = 'none';
+        });
+        saveProfileBtn.addEventListener('click', saveProfileChanges);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === editProfileModal) {
+                editProfileModal.style.display = 'none';
+            }
+        });
+
+        // Update classroom view based on selection
+        function updateClassroomView() {
+            const selectedClass = classroomSelect.value;
+            
+            if (!selectedClass) {
+                classDetails.innerHTML = '<p>Please select a classroom from the dropdown</p>';
+                studentList.innerHTML = '<li>No classroom selected</li>';
+                progressReport.innerHTML = '<p>Select a classroom to view progress data</p>';
+                return;
+            }
+            
+            const classroom = classroomData[selectedClass];
+            
+            // Update class info
+            classDetails.innerHTML = `
+                <p><strong>Class:</strong> ${classroom.name}</p>
+                <p><strong>Subject:</strong> ${classroom.subject}</p>
+                <p><strong>Students:</strong> ${classroom.students.length}</p>
+            `;
+            
+            // Update student list
+            studentList.innerHTML = '';
+            classroom.students.forEach(student => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${student.name}</span>
+                    <span>${student.progress}%</span>
+                `;
+                studentList.appendChild(li);
+            });
+            
+            // Update progress report
+            updateProgressReport(classroom);
+        }
+
+        // Update progress report section
+        function updateProgressReport(classroom) {
+            const students = classroom.students;
+            const totalStudents = students.length;
+            const averageProgress = students.reduce((sum, student) => sum + student.progress, 0) / totalStudents;
+            const highAchievers = students.filter(student => student.progress >= 90).length;
+            const needHelp = students.filter(student => student.progress < 70).length;
+            
+            progressReport.innerHTML = `
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <h3>Class Overview</h3>
+                        <div class="progress-metrics">
+                            <div class="metric">
+                                <div class="metric-value">${totalStudents}</div>
+                                <div class="metric-label">Students</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${highAchievers}</div>
+                                <div class="metric-label">High Achievers</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${needHelp}</div>
+                                <div class="metric-label">Need Help</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${averageProgress}%"></div>
+                        </div>
+                        <p>Average Progress: <strong>${averageProgress.toFixed(1)}%</strong></p>
+                    </div>
+                </div>
+                
+                <div class="student-progress">
+                    <h3>Individual Progress</h3>
+                    ${students.map(student => `
+                        <div class="student-row">
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-progress-bar">
+                                <div class="student-progress-fill" style="width: ${student.progress}%"></div>
+                            </div>
+                            <div class="student-score">${student.progress}%</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="class-average">
+                    <h3>Class Average: ${averageProgress.toFixed(1)}%</h3>
+                    <p>${getPerformanceMessage(averageProgress)}</p>
+                </div>
+            `;
+        }
+
+        // Get performance message based on average
+        function getPerformanceMessage(average) {
+            if (average >= 90) return "Excellent class performance!";
+            if (average >= 80) return "Good class performance. Keep it up!";
+            if (average >= 70) return "Average performance. Some areas need improvement.";
+            return "Below average performance. Consider additional support.";
+        }
+
+        // Save profile changes
+        function saveProfileChanges() {
+            teacherName.textContent = editName.value;
+            teacherSubject.textContent = editSubject.value;
+            profilePic.src = editPic.value;
+            editProfileModal.style.display = 'none';
+        }
+
+        // Initialize with first classroom selected
+        classroomSelect.value = "math101";
+        updateClassroomView();
+    </script>
+</body>
+</html>

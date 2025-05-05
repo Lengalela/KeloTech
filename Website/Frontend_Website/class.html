@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classrooms</title>
+    <style>
+        :root {
+            --primary: #20531a;
+            --primaryB: #0c6c01;
+            --secondary: #6c757d;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --light: #f8f9fa;
+            --dark: #212121;
+            --gray: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            position: relative; /* Needed for absolute positioning */
+            min-height: 100vh; /* Ensures full coverage */
+            overflow-x: hidden; /* Prevents unwanted scrolling */
+        }
+
+        /* Blurred background (does not affect layout) */
+        body::before {
+            content: "";
+            position: fixed; /* Covers entire viewport without moving */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('icons/bg.jpg');
+            background-size: cover; /* Prevents repeating */
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1; /* Keeps it behind content */
+            transform: scale(1.1); /* Expands the image to hide blurred edges */
+            filter: blur(5px); /* Adjust blur strength */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fee7bdc6;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .header h1 {
+            margin: 0;
+            color: var(--primary);
+        }
+        
+        .classroom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .classroom-card {
+            background: #fee7bdc6;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--gray);
+        }
+        
+        .classroom-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .classroom-card.active {
+            border: 2px solid var(--primary);
+        }
+        
+        .classroom-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+        }
+        
+        .classroom-header h3 {
+            margin: 0;
+        }
+        
+        .classroom-body {
+            padding: 1rem;
+        }
+        
+        .classroom-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+        
+        .progress-container {
+            margin: 1rem 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: whitesmoke;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 5px;
+        }
+        
+        .performance-section {
+            background-color: #fee7bdc6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric-card {
+            background: #fee7bdc6;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        
+        .metric-high {
+            color: var(--success);
+        }
+        
+        .metric-medium {
+            color: var(--warning);
+        }
+        
+        .metric-low {
+            color: var(--danger);
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+        
+        .comments-section {
+            margin-top: 2rem;
+        }
+        
+        .comment-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-teacher {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .comment-date {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+        
+        .comment-text {
+            margin: 0;
+        }
+        
+        .add-comment {
+            margin-top: 1.5rem;
+        }
+        
+        .add-comment textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-family: inherit;
+            margin-bottom: 0.5rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .add-comment button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .no-classroom {
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primaryB);
+        }
+
+        .edit-toggle {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Classroom</h1>
+            <button onclick="window.history.back()" class="edit-toggle">Previous Page</button>
+            <div>
+                <select id="termSelect" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
+                    <option>Fall 2023</option>
+                    <option>Spring 2024</option>
+                    <option>Summer 2024</option>
+                </select>
+            </div>
+        </div>
+        
+        <h2>Your Classrooms</h2>
+        <div class="classroom-grid" id="classroomGrid">
+            <!-- Classroom cards will be inserted here by JavaScript -->
+        </div>
+        
+        <div id="performanceContainer">
+            <div class="no-classroom" id="noClassroomSelected">
+                <p>Select a classroom to view performance data and comments</p>
+            </div>
+            
+            <div class="hidden" id="classroomPerformance">
+                <div class="performance-section">
+                    <h2 id="selectedClassroomName">Classroom Performance</h2>
+                    
+                    <div class="performance-metrics">
+                        <div class="metric-card">
+                            <div class="metric-label">Average Score</div>
+                            <div class="metric-value metric-high" id="avgScore">87%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Completion Rate</div>
+                            <div class="metric-value metric-medium" id="completionRate">78%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Top Students</div>
+                            <div class="metric-value metric-high" id="topStudents">12</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Needs Help</div>
+                            <div class="metric-value metric-low" id="needsHelp">5</div>
+                        </div>
+                    </div>
+                    
+                    <h3>Progress Overview</h3>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Assignment Completion</span>
+                            <span id="assignmentCompletion">78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Test Scores Average</span>
+                            <span id="testScoresAvg">84%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 84%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Participation Rate</span>
+                            <span id="participationRate">92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <h2>Teacher Comments</h2>
+                    <div id="commentsList">
+                        <!-- Comments will be inserted here by JavaScript -->
+                    </div>
+                    
+                    <div class="add-comment">
+                        <h3>Add New Comment</h3>
+                        <textarea id="newComment" placeholder="Enter your comment about this classroom..."></textarea>
+                        <button id="submitComment">Submit Comment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for classrooms
+        const classrooms = [
+            {
+                id: 'math101',
+                name: 'Mathematics 101',
+                teacher: 'Ms. Johnson',
+                students: 24,
+                progress: 78,
+                term: 'Fall 2023'
+            },
+            {
+                id: 'eng201',
+                name: 'English Literature 201',
+                teacher: 'Mr. Williams',
+                students: 18,
+                progress: 85,
+                term: 'Fall 2023'
+            },
+            {
+                id: 'sci301',
+                name: 'Advanced Science 301',
+                teacher: 'Dr. Smith',
+                students: 15,
+                progress: 92,
+                term: 'Fall 2023'
+            },
+            {
+                id: 'hist202',
+                name: 'World History 202',
+                teacher: 'Mrs. Davis',
+                students: 22,
+                progress: 68,
+                term: 'Fall 2023'
+            }
+        ];
+
+        // Sample comments data
+        const comments = {
+            math101: [
+                {
+                    id: 1,
+                    teacher: 'Ms. Johnson',
+                    date: '2023-10-15',
+                    text: 'The class is showing good progress with algebraic concepts. Need to work more on word problems.'
+                },
+                {
+                    id: 2,
+                    teacher: 'Ms. Johnson',
+                    date: '2023-11-02',
+                    text: 'Midterm results were excellent! The students have really grasped the fundamentals.'
+                }
+            ],
+            eng201: [
+                {
+                    id: 1,
+                    teacher: 'Mr. Williams',
+                    date: '2023-10-18',
+                    text: 'The class discussion on Shakespeare was very engaging. Looking forward to their essays.'
+                }
+            ],
+            sci301: [
+                {
+                    id: 1,
+                    teacher: 'Dr. Smith',
+                    date: '2023-10-22',
+                    text: 'Lab reports have been outstanding. The students are demonstrating excellent scientific method skills.'
+                }
+            ],
+            hist202: [
+                {
+                    id: 1,
+                    teacher: 'Mrs. Davis',
+                    date: '2023-10-10',
+                    text: 'Need to find ways to make ancient history more engaging. Some students are struggling with retention.'
+                },
+                {
+                    id: 2,
+                    teacher: 'Mrs. Davis',
+                    date: '2023-10-28',
+                    text: 'Field trip to the museum helped bring the material to life. Participation has improved.'
+                }
+            ]
+        };
+
+        // Performance data
+        const performanceData = {
+            math101: {
+                avgScore: 87,
+                completionRate: 78,
+                topStudents: 12,
+                needsHelp: 5,
+                assignmentCompletion: 78,
+                testScoresAvg: 84,
+                participationRate: 92
+            },
+            eng201: {
+                avgScore: 91,
+                completionRate: 85,
+                topStudents: 14,
+                needsHelp: 2,
+                assignmentCompletion: 85,
+                testScoresAvg: 89,
+                participationRate: 95
+            },
+            sci301: {
+                avgScore: 94,
+                completionRate: 98,
+                topStudents: 10,
+                needsHelp: 1,
+                assignmentCompletion: 98,
+                testScoresAvg: 96,
+                participationRate: 100
+            },
+            hist202: {
+                avgScore: 72,
+                completionRate: 65,
+                topStudents: 8,
+                needsHelp: 7,
+                assignmentCompletion: 65,
+                testScoresAvg: 68,
+                participationRate: 75
+            }
+        };
+
+        // DOM Elements
+        const classroomGrid = document.getElementById('classroomGrid');
+        const noClassroomSelected = document.getElementById('noClassroomSelected');
+        const classroomPerformance = document.getElementById('classroomPerformance');
+        const selectedClassroomName = document.getElementById('selectedClassroomName');
+        const commentsList = document.getElementById('commentsList');
+        const submitComment = document.getElementById('submitComment');
+        const newComment = document.getElementById('newComment');
+        const termSelect = document.getElementById('termSelect');
+
+        // Performance metric elements
+        const avgScore = document.getElementById('avgScore');
+        const completionRate = document.getElementById('completionRate');
+        const topStudents = document.getElementById('topStudents');
+        const needsHelp = document.getElementById('needsHelp');
+        const assignmentCompletion = document.getElementById('assignmentCompletion');
+        const testScoresAvg = document.getElementById('testScoresAvg');
+        const participationRate = document.getElementById('participationRate');
+
+        // Currently selected classroom
+        let currentClassroom = null;
+
+        // Initialize the page
+        function init() {
+            renderClassrooms();
+            termSelect.addEventListener('change', filterClassroomsByTerm);
+            submitComment.addEventListener('click', addNewComment);
+        }
+
+        // Render classroom cards
+        function renderClassrooms(filterTerm = 'Fall 2023') {
+            classroomGrid.innerHTML = '';
+            
+            const filteredClassrooms = classrooms.filter(classroom => classroom.term === filterTerm);
+            
+            if (filteredClassrooms.length === 0) {
+                classroomGrid.innerHTML = '<p>No classrooms found for the selected term.</p>';
+                return;
+            }
+            
+            filteredClassrooms.forEach(classroom => {
+                const card = document.createElement('div');
+                card.className = 'classroom-card';
+                card.dataset.id = classroom.id;
+                card.innerHTML = `
+                    <div class="classroom-header">
+                        <h3>${classroom.name}</h3>
+                    </div>
+                    <div class="classroom-body">
+                        <div class="classroom-meta">
+                            <span>Teacher: ${classroom.teacher}</span>
+                            <span>${classroom.students} students</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Overall Progress</span>
+                                <span>${classroom.progress}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${classroom.progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => selectClassroom(classroom.id));
+                classroomGrid.appendChild(card);
+            });
+        }
+
+        // Filter classrooms by selected term
+        function filterClassroomsByTerm() {
+            const term = termSelect.value;
+            renderClassrooms(term);
+            
+            // If the current classroom is from a different term, deselect it
+            if (currentClassroom && currentClassroom.term !== term) {
+                deselectClassroom();
+            }
+        }
+
+        // Select a classroom
+        function selectClassroom(classroomId) {
+            // Remove active class from all cards
+            document.querySelectorAll('.classroom-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            const selectedCard = document.querySelector(`.classroom-card[data-id="${classroomId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+            
+            // Find the classroom data
+            const classroom = classrooms.find(c => c.id === classroomId);
+            if (!classroom) return;
+            
+            currentClassroom = classroom;
+            
+            // Update performance view
+            noClassroomSelected.classList.add('hidden');
+            classroomPerformance.classList.remove('hidden');
+            
+            // Set classroom name
+            selectedClassroomName.textContent = `${classroom.name} - ${classroom.teacher}`;
+            
+            // Update performance metrics
+            const performance = performanceData[classroomId];
+            if (performance) {
+                avgScore.textContent = `${performance.avgScore}%`;
+                completionRate.textContent = `${performance.completionRate}%`;
+                topStudents.textContent = performance.topStudents;
+                needsHelp.textContent = performance.needsHelp;
+                
+                assignmentCompletion.textContent = `${performance.assignmentCompletion}%`;
+                document.querySelector('#assignmentCompletion + .progress-bar .progress-fill').style.width = `${performance.assignmentCompletion}%`;
+                
+                testScoresAvg.textContent = `${performance.testScoresAvg}%`;
+                document.querySelector('#testScoresAvg + .progress-bar .progress-fill').style.width = `${performance.testScoresAvg}%`;
+                
+                participationRate.textContent = `${performance.participationRate}%`;
+                document.querySelector('#participationRate + .progress-bar .progress-fill').style.width = `${performance.participationRate}%`;
+                
+                // Set metric colors based on values
+                setMetricColor(avgScore, performance.avgScore);
+                setMetricColor(completionRate, performance.completionRate);
+            }
+            
+            // Load comments
+            loadComments(classroomId);
+        }
+
+        // Deselect classroom
+        function deselectClassroom() {
+            currentClassroom = null;
+            document.querySelectorAll('.classroom-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            noClassroomSelected.classList.remove('hidden');
+            classroomPerformance.classList.add('hidden');
+        }
+
+        // Set metric color based on value
+        function setMetricColor(element, value) {
+            element.classList.remove('metric-high', 'metric-medium', 'metric-low');
+            
+            if (value >= 85) {
+                element.classList.add('metric-high');
+            } else if (value >= 70) {
+                element.classList.add('metric-medium');
+            } else {
+                element.classList.add('metric-low');
+            }
+        }
+
+        // Load comments for a classroom
+        function loadComments(classroomId) {
+            commentsList.innerHTML = '';
+            
+            const classroomComments = comments[classroomId] || [];
+            
+            if (classroomComments.length === 0) {
+                commentsList.innerHTML = '<p>No comments yet for this classroom.</p>';
+                return;
+            }
+            
+            classroomComments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-card';
+                commentElement.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-teacher">${comment.teacher}</span>
+                        <span class="comment-date">${formatDate(comment.date)}</span>
+                    </div>
+                    <p class="comment-text">${comment.text}</p>
+                `;
+                commentsList.appendChild(commentElement);
+            });
+        }
+
+        // Add new comment
+        function addNewComment() {
+            if (!currentClassroom || !newComment.value.trim()) return;
+            
+            const commentText = newComment.value.trim();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Create new comment object
+            const newCommentObj = {
+                id: comments[currentClassroom.id] ? comments[currentClassroom.id].length + 1 : 1,
+                teacher: currentClassroom.teacher,
+                date: today,
+                text: commentText
+            };
+            
+            // Add to comments data
+            if (!comments[currentClassroom.id]) {
+                comments[currentClassroom.id] = [];
+            }
+            comments[currentClassroom.id].unshift(newCommentObj);
+            
+            // Reload comments
+            loadComments(currentClassroom.id);
+            
+            // Clear input
+            newComment.value = '';
+        }
+
+        // Format date as Month Day, Year
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Initialize the page
+        init();
+    </script>
+</body>
+</html>

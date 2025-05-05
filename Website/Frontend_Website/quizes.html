@@ -9,96 +9,71 @@
     body {
       font-family: Arial, sans-serif;
       line-height: 1.6;
-      margin: 0;
-      padding: 20px;
+      margin: 0; padding: 20px;
       background-color: #f5f5f5;
     }
-    .sidebar3 {
-      position: fixed;
-      left: 20px; top: 20px;
-    }
+    .sidebar3 { position: fixed; left:20px; top:20px; }
     .sidebar3 a {
-      display: inline-block;
-      padding: 10px 15px;
-      background-color: #4CAF50;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
+      display:inline-block;
+      padding:10px 15px;
+      background:#4CAF50; color:#fff;
+      text-decoration:none; border-radius:5px;
     }
-    .sidebar3 a:hover { background-color: #45a049; }
-    .main-right {
-      margin-left: 100px;
-      max-width: 800px;
-    }
+    .sidebar3 a:hover { background:#45a049; }
+    .main-right { margin-left:100px; max-width:800px; }
     .quiz {
-      background: white;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background:#fff; padding:20px; margin-bottom:30px;
+      border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
     }
-    .quiz h2 {
-      color: #333;
-      margin-top: 0;
-    }
-    .question {
-      margin-bottom: 20px;
-    }
-    .question h4 {
-      margin: 0 0 8px;
-      font-weight: bold;
-    }
-    .answer {
-      margin: 0 0 16px;
-      padding-left: 8px;
-    }
-    .options {
-      margin-left: 20px;
-    }
-    .option {
-      margin: 8px 0;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 4px;
-    }
-    .option:hover { background-color: #f0f0f0; }
-    .option.selected { background-color: #d4edda; }
-    .option.correct  { background-color: #d4edda; font-weight: bold; }
-    .option.incorrect{ background-color: #f8d7da; }
-    button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    button:hover { background-color: #45a049; }
-    .results {
-      margin-top: 20px;
-      padding: 15px;
-      background: #e7f3fe;
-      border-radius: 4px;
-      display: none;
-    }
-    .answer-key {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 4px;
-      display: none;
-    }
-    .score {
-      font-size: 18px; font-weight: bold;
-      margin-bottom: 10px;
-    }
+    .quiz h2 { color:#333; margin-top:0; }
+    .question { margin-bottom:20px; }
+    .question h4 { margin:0 0 8px; font-weight:bold; }
     pre {
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 4px;
-      overflow-x: auto;
+      background:#f8f9fa; padding:10px; border-radius:4px;
+      overflow-x:auto; margin:8px 0;
+    }
+    .options { margin-left:20px; }
+    .option {
+      margin:8px 0; cursor:pointer; padding:8px;
+      border-radius:4px;
+      user-select: none;
+    }
+    .option:hover { background:#f0f0f0; }
+    .option.selected { background:#d4edda; }
+    .option.correct  { background:#d4edda; font-weight:bold; }
+    .option.incorrect{ background:#f8d7da; }
+    button {
+      background:#4CAF50; color:#fff; border:none;
+      padding:10px 15px; border-radius:4px;
+      cursor:pointer; font-size:16px; margin-top:10px;
+    }
+    button:hover { background:#45a049; }
+    .results {
+      margin-top:20px; padding:15px; background:#e7f3fe;
+      border-radius:4px; display:none;
+      text-align:center;
+    }
+    .badge {
+      font-size:24px;
+      margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .badge img {
+      width:48px;
+      height:48px;
+      margin-right:10px;
+    }
+    .score { font-size:18px; font-weight:bold; margin-bottom:10px; }
+    .feedback-ai { margin-top:10px; font-style:italic; }
+    /* confetti canvas overrides */
+    #confettiCanvas {
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      z-index:9999;
+      display:none;
     }
   </style>
 </head>
@@ -109,162 +84,208 @@
   <main class="main-right">
     <div id="quiz1" class="quiz"></div>
   </main>
+
+  <!-- Confetti canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // rule-based feedback
-      function getFeedback(score, total) {
-        const pct = (score/total)*100;
-        if (pct === 100) return "🌟 Perfect! You nailed it!";
-        if (pct >= 80)  return "✅ Great job! A little more review and you'll be perfect.";
-        if (pct >= 50)  return "📝 Good effort! Keep practicing and you'll improve!";
-        return "📚 Let's review the material again and try once more!";
-      }
+  document.addEventListener("DOMContentLoaded", function() {
+    // 0) Auth & enrollment context
+    const token = localStorage.getItem("jwt");
+    if (!token) return window.location.href = "login.html";
 
-      // load context & lesson
-      const ctx = JSON.parse(localStorage.getItem("currentQuizContext")||"{}");
-      if (!ctx.lessonId) { window.location.href="index.html"; return; }
-      const lesson = JSON.parse(localStorage.getItem("currentLesson")||"{}");
-      if (!lesson.content) {
-        alert("No quiz for this lesson."); window.location.href="index.html"; return;
-      }
+    const enrollment = JSON.parse(localStorage.getItem("currentEnrollment")||"{}");
+    const enrollmentId = enrollment.enrollment_id;
 
-      let content = lesson.content;
-      if (typeof content === "string") content = JSON.parse(content);
-      const quizBlock = (content.contentBlocks||[]).find(b=>b.type==="quiz");
-      if (!quizBlock) {
-        alert("No quiz in this lesson."); window.location.href="index.html"; return;
-      }
+    const ctx = JSON.parse(localStorage.getItem("currentQuizContext")||"{}");
+    if (!ctx.lessonId) return window.location.href = "index.html";
 
-      // derive title "Lesson X Quiz"
-      let title = quizBlock.title;
-      if (title.startsWith("Quiz:")) {
-        title = title.split(":")[1].trim() + " Quiz";
-      }
+    // Feedback helper
+    function getFeedback(pct) {
+      if (pct === 100) return "🌟 Perfect! You nailed it!";
+      if (pct >= 80)  return "✅ Great job! A little more review and you'll be perfect.";
+      if (pct >= 50)  return "📝 Good effort! Keep practicing and you'll improve!";
+      return "📚 Let's review the material again and try once more!";
+    }
 
-      const container = document.getElementById("quiz1");
-      container.innerHTML = "<h2>" + title + "</h2>";
-
-      // parse raw HTML
-      const tmp = document.createElement("div");
-      tmp.innerHTML = quizBlock.content;
-      const lis = Array.from(tmp.querySelectorAll("ol>li"));
-      const isMCQ = lis.some(li=> li.querySelector("ul"));
-
-      if (!isMCQ) {
-        // Q&A style
-        lis.forEach(function(li,i){
-          const qText = li.childNodes[0].textContent.trim();
-          const em = li.querySelector("em");
-          let ans = "";
-          if (em && em.nextSibling) ans = em.nextSibling.textContent.trim();
-          const qDiv = document.createElement("div");
-          qDiv.className = "question";
-          qDiv.innerHTML =
-            "<h4>" + (i+1) + ". " + qText + "</h4>" +
-            "<div class='answer'>" + ans + "</div>";
-          container.appendChild(qDiv);
+    // 1) Confetti setup
+    const confCanvas = document.getElementById("confettiCanvas");
+    const cc = confCanvas.getContext("2d");
+    let confetti = [];
+    function resize() {
+      confCanvas.width = window.innerWidth;
+      confCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+    function randomColor() {
+      const colors = ["#ff0","#0ff","#f0f","#0f0","#00f","#f00"];
+      return colors[Math.floor(Math.random()*colors.length)];
+    }
+    function launchConfetti() {
+      confetti = [];
+      for(let i=0;i<150;i++){
+        confetti.push({
+          x: Math.random()*confCanvas.width,
+          y: Math.random()*confCanvas.height - confCanvas.height,
+          size: Math.random()*8+2,
+          color: randomColor(),
+          speedY: Math.random()*5+2,
+          speedX: Math.random()*4-2
         });
-        return;
       }
-
-      // MCQ style
-      // collect correct answers
-      const answerKey = [];
-      lis.forEach(li=>{
-        li.querySelectorAll("ul>li").forEach(opt=>{
-          if (opt.querySelector("strong")) {
-            answerKey.push(opt.textContent.trim());
-          }
-        });
+      confCanvas.style.display = "block";
+      animateConfetti();
+    }
+    function animateConfetti() {
+      cc.clearRect(0,0,confCanvas.width,confCanvas.height);
+      confetti.forEach((c,i)=>{
+        c.y += c.speedY; c.x += c.speedX;
+        cc.fillStyle = c.color;
+        cc.beginPath();
+        cc.arc(c.x,c.y,c.size,0,2*Math.PI);
+        cc.fill();
+        if(c.y > confCanvas.height) confetti.splice(i,1);
       });
+      if(confetti.length>0) requestAnimationFrame(animateConfetti);
+      else confCanvas.style.display="none";
+    }
 
-      // render questions
-      lis.forEach(function(li,i){
-        const qText = li.childNodes[0].textContent.trim();
-        const qDiv = document.createElement("div");
-        qDiv.className = "question";
-        qDiv.innerHTML = "<h4>" + (i+1) + ". " + qText + "</h4>";
+    // 2) Load quiz data
+    const lesson = JSON.parse(localStorage.getItem("currentLesson")||"{}");
+    let content = lesson.content;
+    if (typeof content === "string") content = JSON.parse(content);
+    const quizBlock = (content.contentBlocks||[]).find(b=>b.type==="quiz");
 
-        // clone any code snippets
-        li.querySelectorAll("pre").forEach(function(pre){
-          qDiv.appendChild(pre.cloneNode(true));
+    // 3) Title
+    let title = quizBlock.title;
+    if (title.startsWith("Quiz:")) title = title.split(":")[1].trim()+" Quiz";
+    const container = document.getElementById("quiz1");
+    container.innerHTML = "<h2>"+title+"</h2>";
+
+    // 4) Parse & render
+    const tmp = document.createElement("div");
+    tmp.innerHTML = quizBlock.content;
+    const lis = Array.from(tmp.querySelectorAll("ol>li"));
+    const akP = tmp.querySelector("p strong");
+    let answerKey = [];
+    if(akP){
+      const txt = akP.parentElement.textContent.replace(/Answer Key:\s*/i,"");
+      answerKey = txt.split(/\s*,\s*/).map(p=>p.split(/[-–]/)[1].trim().toLowerCase());
+    }
+    lis.forEach((li,i)=>{
+      const nodes = Array.from(li.childNodes).filter(n=>n.nodeName!=="BR");
+      const q = nodes[0].textContent.trim();
+      const qDiv = document.createElement("div"); qDiv.className="question";
+      qDiv.innerHTML = `<h4>${i+1}. ${q}</h4>`;
+      let start = 1;
+      if(nodes[1]?.nodeName==="CODE"){
+        const pre = document.createElement("pre");
+        pre.innerHTML = nodes[1].outerHTML;
+        qDiv.appendChild(pre);
+        start=2;
+      }
+      const opts = document.createElement("div"); opts.className="options";
+      for(let j=start;j<nodes.length;j++){
+        const txt = nodes[j].textContent.trim();
+        if(!txt) continue;
+        const o = document.createElement("div");
+        o.className="option";
+        o.textContent=txt;
+        o.addEventListener("click",()=>{
+          opts.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
+          o.classList.add("selected");
         });
-
-        // options
-        const optsContainer = document.createElement("div");
-        optsContainer.className = "options";
-        li.querySelectorAll("ul>li").forEach(function(optLi){
-          const text = optLi.textContent.trim();
-          const correct = !!optLi.querySelector("strong");
-          const odiv = document.createElement("div");
-          odiv.className = "option";
-          odiv.dataset.correct = correct;
-          odiv.textContent = text;
-          odiv.addEventListener("click", function(){
-            optsContainer.querySelectorAll(".option")
-              .forEach(o=>o.classList.remove("selected"));
-            odiv.classList.add("selected");
-          });
-          optsContainer.appendChild(odiv);
-        });
-        qDiv.appendChild(optsContainer);
-        container.appendChild(qDiv);
-      });
-
-      // append submit/results/answer-key
-      container.insertAdjacentHTML("beforeend",
-        '<button class="submit-btn">Submit Quiz</button>' +
-        '<div class="results"></div>' +
-        '<div class="answer-key">' +
-          '<h3>Answer Key:</h3>' +
-          '<p>' + answerKey.map((a,i)=> (i+1) + ' – ' + a).join(', ') + '</p>' +
-        '</div>'
-      );
-
-      const submitBtn    = container.querySelector(".submit-btn");
-      const resultsDiv   = container.querySelector(".results");
-      const answerKeyDiv = container.querySelector(".answer-key");
-
-      submitBtn.addEventListener("click", function(){
-        let score = 0;
-        const questions = container.querySelectorAll(".question");
-        questions.forEach(function(qDiv){
-          const opts = qDiv.querySelectorAll(".option");
-          opts.forEach(function(o){
-            if (o.dataset.correct==="true") o.classList.add("correct");
-          });
-          const sel = qDiv.querySelector(".option.selected");
-          if (sel) {
-            if (sel.dataset.correct==="true") score++;
-            else sel.classList.add("incorrect");
-          }
-        });
-
-        const total = questions.length;
-        resultsDiv.style.display = "block";
-        resultsDiv.innerHTML =
-          '<div class="score">You scored ' + score + ' out of ' + total + '</div>' +
-          '<div class="feedback-local">' + getFeedback(score,total) + '</div>' +
-          '<div class="feedback-ai">💬 Fetching AI feedback…</div>';
-        answerKeyDiv.style.display = "block";
-
-        fetch("http://localhost:5000/chat", {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify({score,total,topic:title})
-        })
-        .then(r=>r.json())
-        .then(js=>{
-          resultsDiv.querySelector(".feedback-ai").innerText = js.response;
-        })
-        .catch(()=>{
-          const aiDiv = resultsDiv.querySelector(".feedback-ai");
-          aiDiv.innerText = "Error fetching AI feedback";
-          aiDiv.style.color = "red";
-        });
-      });
-
+        opts.appendChild(o);
+      }
+      qDiv.appendChild(opts);
+      container.appendChild(qDiv);
     });
+
+    // 5) Submit & results
+    container.insertAdjacentHTML("beforeend",
+      '<button class="submit-btn">Submit Quiz</button>'+
+      '<div class="results"></div>'
+    );
+    const submitBtn = container.querySelector(".submit-btn");
+    const resultsDiv = container.querySelector(".results");
+
+    submitBtn.addEventListener("click",()=>{
+      let correct=0;
+      const answers={};
+      document.querySelectorAll(".question").forEach((qDiv,i)=>{
+        const sel = qDiv.querySelector(".option.selected");
+        const ltr = sel?.textContent.trim().charAt(0).toLowerCase()||null;
+        answers[`q${i+1}`]=ltr;
+        if(ltr===answerKey[i]){
+          sel.classList.add("correct"); correct++;
+        } else if(sel){
+          sel.classList.add("incorrect");
+        }
+      });
+      const total=answerKey.length;
+      const pct=Math.round(correct/total*100);
+
+      // Badge determination
+      let badge=null, emoji="";
+      if(pct>=90){ badge="Gold"; emoji="🥇"; }
+      else if(pct>=80){ badge="Silver"; emoji="🥈"; }
+      else if(pct>=70){ badge="Bronze"; emoji="🥉"; }
+
+      let badgeHTML="";
+      if(badge){
+        badgeHTML = `<div class="badge"><img src="badges/${badge.toLowerCase()}.png" alt="${badge} Badge"/>${emoji} You earned the <strong>${badge} Badge</strong>!</div>`;
+        launchConfetti();
+      } else {
+        badgeHTML = `<div class="badge">No badge earned — try again to reach 70%!</div>`;
+      }
+
+      resultsDiv.style.display="block";
+      resultsDiv.innerHTML = badgeHTML + `
+        <div class="score">You scored ${correct} of ${total} (${pct}%)</div>
+        <div class="feedback-local">${getFeedback(pct)}</div>
+        <div class="feedback-ai">💬 Fetching AI feedback…</div>
+      `;
+
+      // persist percentage and answers
+      const updatedMarks   = {...(enrollment.quiz_marks||{}),   [ctx.lessonId]: pct};
+      const updatedAnswers = {...(enrollment.quiz_answers||{}), [ctx.lessonId]: answers};
+
+      fetch(`/api/enrollments/${enrollmentId}`, {
+        method:"PUT",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":`Bearer ${token}`
+        },
+        body:JSON.stringify({
+          current_level:  enrollment.current_level,
+          current_lesson: enrollment.current_lesson,
+          quiz_marks:     updatedMarks,
+          quiz_answers:   updatedAnswers,
+          ai_feedback:    enrollment.ai_feedback
+        })
+      })
+      .then(r=>r.json())
+      .then(u=>localStorage.setItem("currentEnrollment",JSON.stringify(u)))
+      .catch(console.error);
+
+      // AI feedback
+      fetch("http://localhost:5000/chat", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ score:pct, total, topic:title })
+      })
+      .then(r=>r.json())
+      .then(js=>{
+        resultsDiv.querySelector(".feedback-ai").innerText=js.response;
+      })
+      .catch(()=>{
+        const ai=resultsDiv.querySelector(".feedback-ai");
+        ai.innerText="Error fetching AI feedback";
+        ai.style.color="red";
+      });
+    });
+  });
   </script>
 </body>
 </html>

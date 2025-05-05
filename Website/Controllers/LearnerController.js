@@ -93,4 +93,26 @@ const getLearnerProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerLearner, loginLearner, getLearnerProfile };
+const getLearnerProfileSimple = async (req, res) => {
+  try {
+    const learnerId = req.user.id;
+
+    const result = await pool.query(
+      `SELECT learner_id, first_name, last_name, username, email, school, created_at
+       FROM learners
+       WHERE learner_id = $1`,
+      [learnerId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Learner not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error fetching learner profile:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { registerLearner, loginLearner, getLearnerProfile, getLearnerProfileSimple};

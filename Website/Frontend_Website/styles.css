@@ -1,5 +1,6 @@
 :root {
     --primary-green: #20531a;
+    --secondary-green: #0c6c01;
     --primary-orange: #c83e0f;
     --secondary-orange: #a5340c;
     --dark-orange: #9c2b03;
@@ -9,15 +10,34 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
-    margin-right: 250px;
+    margin-right: 250px; /* Your sidebar width */
     padding: 20px;
     flex-grow: 1;
+    position: relative; /* Needed for absolute positioning */
+    min-height: 100vh; /* Ensures full coverage */
+    overflow-x: hidden; /* Prevents unwanted scrolling */
+}
+
+/* Blurred background (does not affect layout) */
+body::before {
+    content: "";
+    position: fixed; /* Covers entire viewport without moving */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('icons/bg.jpg');
+    background-size: cover; /* Prevents repeating */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1; /* Keeps it behind content */
+    transform: scale(1.1); /* Expands the image to hide blurred edges */
+    filter: blur(5px); /* Adjust blur strength */
 }
 
 #forms {
     font-family: 'Open Sans', sans-serif;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -42,7 +62,7 @@ body {
 .sidebar3 {
     width: 250px;
     height: 100vh;
-    background-color: #333;
+    background-color: var(--secondary-orange);
     padding-top: 20px;
     position: fixed;
     left: 0;
@@ -53,12 +73,11 @@ body {
 }
 
 /* Image for pfp*/
-img {
+.profile img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 1.5rem;
     border: 3px solid var(--primary-green);
 }
 
@@ -90,6 +109,22 @@ img {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
+    margin: 0 auto; /* Ensures horizontal centering */
+}
+  
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.logoC img {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 5px; /* Adds space between logo and login container */
 }
 
 input {
@@ -257,14 +292,61 @@ button:hover {
     background: darkblue;
 }
 
+/* Language Dropdown Styles */
+.language-dropdown {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
 
+.language-btn {
+  background-color: var(--primary-green);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.language-btn:hover {
+  background-color: var(--secondary-green);
+}
+
+.language-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.language-content a {
+  color: black;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.language-content a:hover {
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.language-dropdown:hover .language-content {
+  display: block;
+}
 
 /* Chat button style */
 .chat-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #4CAF50;
+    background-color: var(--primary-green);
     color: white;
     border: none;
     border-radius: 50%;
@@ -294,7 +376,7 @@ button:hover {
 
 /* Chat header */
 .chat-header {
-    background-color: #4CAF50;
+    background-color: var(--primary-green);
     color: white;
     padding: 10px;
     border-top-left-radius: 10px;
@@ -351,7 +433,7 @@ button:hover {
 }
 
 #send-btn:hover {
-    background: darkblue;
+    background: var(--secondary-green);
 }
 
 /* Message styling */
