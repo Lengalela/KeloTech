@@ -4,3 +4,4 @@ Website/database.js
 package-lock.json
 package.json
 Website/.env
+.env.local
